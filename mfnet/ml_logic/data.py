@@ -36,6 +36,8 @@ def get_data(img_resolution=(224,224)):
     y_train = np.array(index['class_id'])-1
     y_test = np.array(test['class_id'])-1
 
+    print("✅ data imported")
+
     return X_train,y_train,X_test,y_test
 
 def data_augmentation(X_train,y_train,X_test,y_test):
@@ -64,5 +66,7 @@ def data_augmentation(X_train,y_train,X_test,y_test):
     train_flow = train_datagen.flow(X_train, y_train, batch_size = 16)
 
     valid_flow = test_datagen.flow(X_test, y_test, batch_size = 1)
+
+    print("✅ data augmented")
 
     return train_flow,valid_flow
