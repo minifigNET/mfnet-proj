@@ -42,7 +42,7 @@ st.text("")
 st.text("")
 st.text("")
 
-#Let the user take a photo from the app
+#Let the user take a photo from the app (more info on camera input here: https://docs.streamlit.io/library/api-reference/widgets/st.camera_input)
 st.title('Take a photo of your minifig here...')
 picture = st.camera_input("and we'll tell you what it's called!")
 
