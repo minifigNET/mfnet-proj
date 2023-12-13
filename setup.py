@@ -6,7 +6,7 @@ with open("requirements.txt") as f:
 requirements = [x.strip() for x in content if "git+" not in x]
 
 setup(name='mfnet',
-      version="0.2",
+      version="0.3",
       description="Lego figure recognition",
       author="minifigNET",
       install_requires=requirements,

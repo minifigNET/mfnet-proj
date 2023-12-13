@@ -31,14 +31,22 @@ def get_data(img_resolution=(224,224)):
     X_train = np.stack(images,axis=0)
     X_test = np.stack(tests,axis=0)
 
-    """Get y train and test from dataframes and make values starts from 0"""
+    """Get y train and test from dataframes"""
 
-    y_train = np.array(index['class_id'])-1
-    y_test = np.array(test['class_id'])-1
+    y_train = np.array(index['class_id'])
+    y_test = np.array(test['class_id'])
 
     print("✅ data imported")
 
     return X_train,y_train,X_test,y_test
+
+def data_preprocessing(X_train,y_train,X_test,y_test):
+
+    """Returns standardized data"""
+    print("✅ data preprocessed")
+
+    return X_train/255,y_train-1,X_test/255,y_test-1
+
 
 def data_augmentation(X_train,y_train,X_test,y_test):
 
