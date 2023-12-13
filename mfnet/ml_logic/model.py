@@ -89,22 +89,20 @@ def evaluate_model(
 
     return metrics
 
-def predict(model,*images:str)->list:
+def predict(model,images:list)->list:
     """
     Predict function, can predict multiple images
+    Needs a list of path to images
     Returns a list of tuples [(label_image1,proba),(label_image2,proba)]
     """
     if len(images) == 1:
-        image = np.expand_dims(np.asarray(Image.open(images.resize((224, 224)))),axis=0)/255
+        image = np.expand_dims(np.asarray(Image.open(images[0]).resize((224, 224))),axis=0)/255
         pred = model.predict(image)
         classe = np.argmax(pred)
         return [(classe+1, pred[0,classe])] # Adding 1 because of the OHE of y_train
     temp=[]
     for image in images:
-        np.asarray(Image.open(image)\
-        .resize((224, 224))
-        )
-        temp.append(image)
+        temp.append(np.asarray(Image.open(image).resize((224, 224))))
     images_np = np.stack(temp,axis=0) / 255
     pred = model.predict(images_np)
 
