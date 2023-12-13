@@ -46,35 +46,3 @@ def data_preprocessing(X_train,y_train,X_test,y_test):
     print("✅ data preprocessed")
 
     return X_train/255,y_train-1,X_test/255,y_test-1
-
-
-def data_augmentation(X_train,y_train,X_test,y_test):
-
-    """Making the imagedatagenerator for train set"""
-
-    train_datagen = ImageDataGenerator(
-    rescale = 1./255,
-    featurewise_center = False,
-    featurewise_std_normalization = False,
-    rotation_range = 10,
-    width_shift_range = 0.1,
-    height_shift_range = 0.1,
-    horizontal_flip = True,
-    zoom_range = (0.8, 1.2),
-    )
-
-    """Making the imagedatagenerator for test set"""
-
-    test_datagen = ImageDataGenerator(
-        rescale = 1./255
-    )
-
-    """Making the actual variables that are going to be trained and validated"""
-
-    train_flow = train_datagen.flow(X_train, y_train, batch_size = 16)
-
-    valid_flow = test_datagen.flow(X_test, y_test, batch_size = 1)
-
-    print("✅ data augmented")
-
-    return train_flow,valid_flow

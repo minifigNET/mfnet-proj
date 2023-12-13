@@ -22,3 +22,27 @@ install_apple_silicon:
 install_mac_intel:
 	pip install --upgrade pip
 	pip install -r requirements_mac_intel.txt
+
+reinstall_package:
+	@pip uninstall -y mfnet || :
+	@pip install -e .
+
+run_preprocess:
+	python -c 'from mfnet.interface.main import preprocess; preprocess()'
+
+run_train:
+	python -c 'from mfnet.interface.main import train; train()'
+
+run_pred:
+	python -c 'from mfnet.interface.main import pred; pred()'
+
+run_evaluate:
+	python -c 'from mfnet.interface.main import evaluate; evaluate()'
+
+run_all: run_preprocess run_train run_pred run_evaluate
+
+run_workflow:
+	PREFECT__LOGGING__LEVEL=${PREFECT_LOG_LEVEL} python -m mfnet.interface.workflow
+
+run_api:
+	uvicorn mfnet.api.fast:app --reload

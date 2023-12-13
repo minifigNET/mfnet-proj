@@ -3,7 +3,7 @@ from tensorflow.keras import layers, models as keras_models
 from tensorflow.keras.callbacks import EarlyStopping,ReduceLROnPlateau
 from tensorflow.keras.optimizers import Adam
 import numpy as np
-
+from PIL import Image
 
 def initialize_model(nb_labels=38): #Function to create a transfer learning model, we can chose number of labels and the base model
 
@@ -54,7 +54,7 @@ def train_model(
         y_train,
         validation_data = (X_test,y_test),
         epochs = 100,
-        verbose=2,
+        verbose=1,
         shuffle=True,
         batch_size=4,
         callbacks = [es]
@@ -88,3 +88,24 @@ def evaluate_model(
     print(f"✅ Model evaluated, accuracy: {round(accuracy, 2)}")
 
     return metrics
+
+def predict(model,*images:str)->list:
+    """
+    Predict function, can predict multiple images
+    Returns a list of tuples [(label_image1,proba),(label_image2,proba)]
+    """
+    if len(images) == 1:
+        image = np.expand_dims(np.asarray(Image.open(images.resize((224, 224)))),axis=0)/255
+        pred = model.predict(image)
+        classe = np.argmax(pred)
+        return [(classe+1, pred[0,classe])] # Adding 1 because of the OHE of y_train
+    temp=[]
+    for image in images:
+        np.asarray(Image.open(image)\
+        .resize((224, 224))
+        )
+        temp.append(image)
+    images_np = np.stack(temp,axis=0) / 255
+    pred = model.predict(images_np)
+
+    return [(np.argmax(probs)+1,probs[np.argmax(probs)]) for i,probs in enumerate(pred)]
