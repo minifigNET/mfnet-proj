@@ -15,78 +15,34 @@ st.set_page_config(
 
 
 
-#TODO add background image - I really don't know how to do this!
+#TODO add background image and colours - I really don't know what I'm doing here!!
 
 
+# with open('minifig.toml', 'r') as f:
+#     config = toml.load(f)
 
-#TRIAL ONE:
-# @st.cache_data(allow_output_mutation=True)
-# @st.cache_data()
-# def get_base64_of_bin_file(bin_file):
-#     with open(bin_file, 'rb') as f:
-#         data = f.read()
-#     return base64.b64encode(data).decode()
+# theme = config.get('theme', {})
+# primaryColor = theme.get('primaryColor')
+# backgroundColor = theme.get('backgroundColor')
+# secondaryBackgroundColor = theme.get('secondaryBackgroundColor')
+# textColor = theme.get('textColor')
+# font = theme.get('font')
 
-# def set_png_as_page_bg(png_file):
-#     bin_str = get_base64_of_bin_file(png_file)
-#     page_bg_img = (
-#     <style>
-#     body {
-    # background-image: url("website/blueblocks.png;base64,%s");
-#         background-image: url("website/blueblocks/png;base64,%s");
+# css = f"""
+# <style>
+# .stMarkdown {{
+#     primaryColor: {primaryColor};
+#     background-color: {backgroundColor};
+#     secondaryBackgroundColor: {secondaryBackgroundColor};
+#     color: {textColor};
+#     font-family: {font};
+# }}
+# </style>
+# """
 
-#     background-size: cover;
-#     }
-#     </style>)
-#     % bin_str
+# st.markdown(css, unsafe_allow_html=True)
 
-#     st.markdown(page_bg_img, unsafe_allow_html=True)
-#     return
-
-# set_png_as_page_bg('blueblocks.png')
-
-
-#TRIAL TWO:
-st.markdown(
-    """
-    <style>
-    .reportview-container {
-        background: url("website/blueblocks.png");
-    }
-   </style>
-    """,
-    unsafe_allow_html=True
-)
-
-#TRIAL THREE:
-
-
-with open('minifig.toml', 'r') as f:
-    config = toml.load(f)
-
-theme = config.get('theme', {})
-primaryColor = theme.get('primaryColor')
-backgroundColor = theme.get('backgroundColor')
-secondaryBackgroundColor = theme.get('secondaryBackgroundColor')
-textColor = theme.get('textColor')
-font = theme.get('font')
-
-# Create a CSS string using your theme settings
-css = f"""
-<style>
-.stMarkdown {{
-    background-color: {secondaryBackgroundColor};
-    color: {textColor};
-    font-family: {font};
-}}
-</style>
-"""
-
-# Apply the CSS to your Streamlit app
-st.markdown(css, unsafe_allow_html=True)
-
-# Now when you use st.markdown, it will be styled with your theme settings
-st.markdown("Experimenting with themes - bear with me...")
+# st.markdown("Experimenting with themes - bear with me...")
 
 #TODO Link HERE to database and search function
 
@@ -97,25 +53,30 @@ st.text("")
 st.text("")
 
 #Let the user take a photo from the app (more info on camera input here: https://docs.streamlit.io/library/api-reference/widgets/st.camera_input)
-st.title('Take a photo of your minifig here...')
-picture = st.camera_input("and we'll tell you what it's called!")
+st.title('Take a photo of your minifig ...')
+st.write('and we\'ll tell you what it\'s called!')
+picture = st.camera_input('Your photo:')
 
 if picture:
     st.image(picture)
 
 #Let the user upload a photo of their minifig
-st.title(' ... or upload a photo of your minifig here')
+st.title(' ... or upload a photo if you prefer')
 uploaded_file = st.file_uploader("Upload your file here...", type=['png', 'jpeg', 'jpg'])
 
 if uploaded_file is not None:
     st.image(uploaded_file)
 
-st.write(f'Thank you! This minifig is called XXX')
-
+# st.write(f'Thank you! This minifig is called XXX')
+st.markdown('<style>h1{font-size: 30px;}</style>', unsafe_allow_html=True)
+st.markdown('# Thank you! This minifig is called XXX', unsafe_allow_html=True)
+st.text("")
+st.text("")
 #TODO - add this later, allowing people to contribute?
-st.title('Minifig name')
+st.title('Can you help us to learn more?')
+st.write("Do you know the name of a minifig that we don't have on your system? If so, please let us know!")
 
-user_text = st.text_input('Do you know the name of this minifig? If so, please let us know:')
+user_text = st.text_input('Name:')
 st.write(f'You entered: {user_text}')
 
 #TODO Query the database based on user input
