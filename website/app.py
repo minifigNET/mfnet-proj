@@ -44,6 +44,21 @@ st.set_page_config(
 
 # st.markdown("Experimenting with themes - bear with me...")
 
+#testing this from Le Wagon site
+
+CSS = """
+h1 {
+    color: red;
+}
+.stApp {
+    background-image: url(https://avatars.githubusercontent.com/u/153445611?v=4);
+    background-size: cover;
+}
+"""
+
+
+st.write(f'<style>{CSS}</style>', unsafe_allow_html=True)
+
 #TODO Link HERE to database and search function
 
 st.title('MinifigNET')
