@@ -4,7 +4,7 @@
 ######
 
 #NOTE TO TEAM - TO OPEN THE FILE ONLINE: streamlit run app.py
-#or now: https://minifigurenet.streamlit.app
+#or now: https://minifignet.streamlit.app
 
 #Lego colours: https://usercontent.flodesk.com/de8064d5-0183-4c90-a0f9-0da438a65bce/upload/37cfed05-9017-4e5b-b5b8-ae11a341f132.pdf
 
@@ -144,6 +144,7 @@ st.write("Do you know the name of a minifig that we don't have on your system? I
 user_text = st.text_input('Name:')
 st.write(f'You entered: {user_text}')
 
+#TODO add drop dwn with all classes and names - api response , hard code to start
 
 #########################################
 #code for adding any image copyright info
