@@ -8,6 +8,9 @@ import base64
 import toml
 from PIL import Image
 
+#####################
+#Set up the page style
+#####################
 
 st.set_page_config(
             page_title="MinifigNET",
@@ -16,37 +19,6 @@ st.set_page_config(
             layout="centered", # wide
             initial_sidebar_state="auto") # collapsed
 
-
-
-
-
-# with open('minifig.toml', 'r') as f:
-#     config = toml.load(f)
-
-# theme = config.get('theme', {})
-# primaryColor = theme.get('primaryColor')
-# backgroundColor = theme.get('backgroundColor')
-# secondaryBackgroundColor = theme.get('secondaryBackgroundColor')
-# textColor = theme.get('textColor')
-# font = theme.get('font')
-
-# css = f"""
-# <style>
-# .stMarkdown {{
-#     primaryColor: {primaryColor};
-#     background-color: {backgroundColor};
-#     secondaryBackgroundColor: {secondaryBackgroundColor};
-#     color: {textColor};
-#     font-family: {font};
-# }}
-# </style>
-# """
-
-# st.markdown(css, unsafe_allow_html=True)
-
-# st.markdown("Experimenting with themes - bear with me...")
-
-#adapted from Le Wagon site
 
 CSS = """
 h1 {
@@ -58,12 +30,19 @@ h1 {
     background-position: top right;
     background-repeat: no-repeat;
 }
+.topImage {
+    background-image: url(Header_image.jpg);
+    background-size: cover;
+    height: 200px;  # adjust as needed
+}
 """
-
-
+st.markdown(f'<style>{CSS}</style>', unsafe_allow_html=True)
+st.markdown('<div class="topImage"></div>', unsafe_allow_html=True)
 st.write(f'<style>{CSS}</style>', unsafe_allow_html=True)
 
-#TODO Link HERE to database and search function
+#TODO fix the image link above
+
+
 
 # st.title('MinifigNET')
 st.markdown('<style>h1{font-size: 100px;}</style>', unsafe_allow_html=True)
@@ -73,11 +52,15 @@ st.text("")
 st.text("")
 st.text("")
 
-#Let the user take a photo from the app (more info on camera input here: https://docs.streamlit.io/library/api-reference/widgets/st.camera_input)
+#####################
+# Let the user take a photo from the app (more info on camera input here: https://docs.streamlit.io/library/api-reference/widgets/st.camera_input)
+#####################
+
 st.title('Take a photo of your minifig ...')
 st.write('and we\'ll tell you what it\'s called!')
 picture = st.camera_input('Your photo:')
 
+#####  I tried the code below but it squishes the image
 # resize(picture)
 # if picture:
 #     st.image(picture)
@@ -104,14 +87,16 @@ if picture:
     img = img.resize((224, 224))
     st.image(img)
 
-
+#####################
 #Let the user upload a photo of their minifig
+#####################
+
 st.title(' ... or upload a photo if you prefer')
 uploaded_file = st.file_uploader("Upload your file here...", type=['png', 'jpeg', 'jpg'])
 
 if uploaded_file is not None:
     st.image(uploaded_file)
-    img = Image.open(uploaded_file)
+    img = Image.open(picture)
     width, height = img.size
     aspect = width / height
 
@@ -127,22 +112,28 @@ if uploaded_file is not None:
     img = img.resize((224, 224))
     st.image(img)
 
-# st.write(f'Thank you! This minifig is called XXX')
+
 st.markdown('<style>h1{font-size: 30px;}</style>', unsafe_allow_html=True)
 st.markdown('# Thank you! This minifig is called XXX', unsafe_allow_html=True)
 st.text("")
 st.text("")
-#TODO - add this later, allowing people to contribute?
+
+#TODO Link HERE to database and search function
+#TODO Query the database based on user input
+
+#TODO - take this out, return later when we are allowing people to contribute?
 st.title('Can you help us to learn more?')
 st.write("Do you know the name of a minifig that we don't have on your system? If so, please let us know!")
 
 user_text = st.text_input('Name:')
 st.write(f'You entered: {user_text}')
 
-#TODO Query the database based on user input
 
 
-#code for adding image copyright info
+#####################
+#code for adding any image copyright info
+#####################
+
 st.text("")
 st.text("")
 st.text("")
