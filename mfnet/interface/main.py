@@ -2,12 +2,11 @@ import pandas as pd
 import numpy as np
 from PIL import Image
 import os
-from mfnet.ml_logic.model import initialize_model,compile_model,train_model,evaluate_model,predict
-from mfnet.ml_logic.data import get_data,data_preprocessing
-from mfnet.ml_logic.registry import load_model,save_model, save_results,mlflow_run, mlflow_transition_model
-
-
+from mfnet.ml_logic.model import initialize_model, compile_model, train_model, evaluate_model, predict
+from mfnet.ml_logic.data import get_data, data_preprocessing
+from mfnet.ml_logic.registry import load_model, save_model, save_results, mlflow_run, mlflow_transition_model
 import pickle
+
 
 def preprocess() -> None:
     """
@@ -21,24 +20,25 @@ def preprocess() -> None:
 
     cwr = os.getcwd()
     index = pd.read_csv(f'/{cwr}/raw_data/index.csv')
-    metadata = pd.read_csv(f'/{cwr}/raw_data/metadata.csv',index_col='class_id')
+    metadata = pd.read_csv(
+        f'/{cwr}/raw_data/metadata.csv', index_col='class_id')
     test = pd.read_csv(f'/{cwr}/raw_data/test.csv')
 
     """Importation des images train et test"""
     images = []
     tests = []
     for path in index['path']:
-        image = np.asarray(Image.open(f'/{cwr}/raw_data/{path}')\
-            .resize((224,224))
-            )
+        image = np.asarray(Image.open(f'/{cwr}/raw_data/{path}')
+                           .resize((224, 224))
+                           )
         images.append(image)
     for path in test['path']:
-        image = np.asarray(Image.open(f'/{cwr}/raw_data/{path}')\
-            .resize((224,224))
-            )
+        image = np.asarray(Image.open(f'/{cwr}/raw_data/{path}')
+                           .resize((224, 224))
+                           )
         tests.append(image)
-    X_train = np.stack(images,axis=0)
-    X_test = np.stack(tests,axis=0)
+    X_train = np.stack(images, axis=0)
+    X_test = np.stack(tests, axis=0)
 
     """Get y train and test from dataframes"""
 
@@ -49,16 +49,17 @@ def preprocess() -> None:
     Store variables in pickle files for faster loading
     """
 
-    with open('X_train.pkl', 'wb') as file:
+    with open(os.path.join(os.getcwd(), "cached_data", "preprocessed", 'X_train.pkl'), 'wb') as file:
         pickle.dump(X_train, file)
-    with open('X_test.pkl', 'wb') as file:
+    with open(os.path.join(os.getcwd(), "cached_data", "preprocessed", 'X_test.pkl'), 'wb') as file:
         pickle.dump(X_test, file)
-    with open('y_train.pkl', 'wb') as file:
+    with open(os.path.join(os.getcwd(), "cached_data", "preprocessed", 'y_train.pkl'), 'wb') as file:
         pickle.dump(y_train, file)
-    with open('y_test.pkl', 'wb') as file:
+    with open(os.path.join(os.getcwd(), "cached_data", "preprocessed", 'y_test.pkl'), 'wb') as file:
         pickle.dump(y_test, file)
 
     print("✅ Data saved locally in pickles")
+
 
 @mlflow_run
 def train(learning_rate=0.0001):
@@ -70,33 +71,35 @@ def train(learning_rate=0.0001):
     print("\n⭐️ Use case: train")
     print("\nLoading preprocessed validation data...")
 
-    with open('X_train.pkl', 'rb') as file:
-        X_train = pickle.load(file) /255
+    with open(os.path.join(os.getcwd(), "cached_data", "preprocessed", 'X_train.pkl'), 'rb') as file:
+        X_train = pickle.load(file) / 255
 
-    with open('X_test.pkl', 'rb') as file:
-        X_test = pickle.load(file) /255
+    with open(os.path.join(os.getcwd(), "cached_data", "preprocessed", 'X_test.pkl'), 'rb') as file:
+        X_test = pickle.load(file) / 255
 
-    with open('y_train.pkl', 'rb') as file:
-        y_train = pickle.load(file) -1
+    with open(os.path.join(os.getcwd(), "cached_data", "preprocessed", 'y_train.pkl'), 'rb') as file:
+        y_train = pickle.load(file) - 1
 
-    with open('y_test.pkl', 'rb') as file:
-        y_test = pickle.load(file) -1
+    with open(os.path.join(os.getcwd(), "cached_data", "preprocessed", 'y_test.pkl'), 'rb') as file:
+        y_test = pickle.load(file) - 1
 
     model = load_model()
 
     if model is None:
-        model = initialize_model(nb_labels=np.max(y_train)+1)
+        nb_classes = len(set(y_train))
+        print(f"ℹ️ Detected {nb_classes} classes.")
+        model = initialize_model(nb_labels=nb_classes)
 
     model = compile_model(model, learning_rate=learning_rate)
 
     model, history = train_model(
-            model,
-            X_train,
-            y_train,
-            X_test,
-            y_test,
-            patience=10
-        )
+        model,
+        X_train,
+        y_train,
+        X_test,
+        y_test,
+        patience=10
+    )
     val_accuracy = np.max(history.history['accuracy'])
     params = dict(
         context="train",
@@ -114,6 +117,8 @@ def train(learning_rate=0.0001):
     return val_accuracy
 
 # @mlflow_run
+
+
 def evaluate(stage: str = "Production"):
     """
     Evaluate the performance of the latest production model on processed data
@@ -124,9 +129,9 @@ def evaluate(stage: str = "Production"):
     model = load_model(stage=stage)
     assert model is not None
 
-    with open('X_test.pkl', 'rb') as file:
+    with open(os.path.join(os.getcwd(), "cached_data", "preprocessed", 'X_test.pkl'), 'rb') as file:
         X_test = pickle.load(file)
-    with open('y_test.pkl', 'rb') as file:
+    with open(os.path.join(os.getcwd(), "cached_data", "preprocessed", 'y_test.pkl'), 'rb') as file:
         y_test = pickle.load(file)
 
     metrics_dict = evaluate_model(model=model, X=X_test, y=y_test)
@@ -142,6 +147,7 @@ def evaluate(stage: str = "Production"):
 
     print("✅ evaluate() done \n")
 
+
 def pred(X_pred: pd.DataFrame = None) -> np.ndarray:
     """
     Make a prediction using the latest trained model
@@ -150,14 +156,16 @@ def pred(X_pred: pd.DataFrame = None) -> np.ndarray:
     print("\n⭐️ Use case: predict")
 
     if len(X_pred) == 1:
-        image = np.expand_dims(np.asarray(Image.open(X_pred[0]).resize((224, 224))),axis=0)/255
+        image = np.expand_dims(np.asarray(Image.open(
+            X_pred[0]).resize((224, 224))), axis=0)/255
         pred = model.predict(image)
         classe = np.argmax(pred)
-        return [(classe+1, pred[0,classe])] # Adding 1 because of the OHE of y_train
-    temp=[]
+        # Adding 1 because of the OHE of y_train
+        return [(classe+1, pred[0, classe])]
+    temp = []
     for image in X_pred:
         temp.append(np.asarray(Image.open(image).resize((224, 224))))
-    images_np = np.stack(temp,axis=0) / 255
+    images_np = np.stack(temp, axis=0) / 255
 
     model = load_model()
     assert model is not None
@@ -166,9 +174,6 @@ def pred(X_pred: pd.DataFrame = None) -> np.ndarray:
     print("\n✅ prediction done: ", pred, pred.shape, "\n")
 
     return pred
-
-
-
 
 
 if __name__ == '__main__':

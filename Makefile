@@ -1,12 +1,16 @@
-create_local_env_as: create_local_env install_apple_silicon
-create_local_env_mi: create_local_env install_mac_intel
+create_local_env_with_as_deps: create_local_env install_apple_silicon_deps
+create_local_env_with_mi_deps: create_local_env install_mac_intel_deps
+create_local_env_with_linux_deps: create_local_env install_linux_deps
 
-create_local_env:
+create_env:
 	pyenv virtualenv 3.10.6 mfnet-env
-	pyenv local mfnet-env
 
-delete_local_env: disable_local_env
+delete_env:
 	pyenv virtualenv-delete mfnet-env
+
+create_local_env: create_env enable_local_env
+
+delete_local_env: disable_local_env delete_env
 
 disable_local_env:
 	rm .python-version
@@ -14,14 +18,17 @@ disable_local_env:
 enable_local_env:
 	pyenv local mfnet-env
 
-
-install_apple_silicon:
+install_apple_silicon_deps:
 	pip install --upgrade pip
 	pip install -r requirements_apple_silicon.txt
 
-install_mac_intel:
+install_mac_intel_deps:
 	pip install --upgrade pip
 	pip install -r requirements_mac_intel.txt
+
+install_linux_deps:
+	pip install --upgrade pip
+	pip install -r requirements_linux.txt
 
 reinstall_package:
 	@pip uninstall -y mfnet || :
