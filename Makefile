@@ -14,7 +14,6 @@ disable_local_env:
 enable_local_env:
 	pyenv local mfnet-env
 
-
 install_apple_silicon:
 	pip install --upgrade pip
 	pip install -r requirements_apple_silicon.txt
@@ -22,3 +21,6 @@ install_apple_silicon:
 install_mac_intel:
 	pip install --upgrade pip
 	pip install -r requirements_mac_intel.txt
+
+start_web_app:
+	streamlit run website/app.py
