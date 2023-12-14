@@ -6,16 +6,18 @@
 import streamlit as st
 import base64
 import toml
+from PIL import Image
+
 
 st.set_page_config(
             page_title="MinifigNET",
-            page_icon="🐍",
+            page_icon="🤖",
+
             layout="centered", # wide
             initial_sidebar_state="auto") # collapsed
 
 
 
-#TODO add background image and colours - I really don't know what I'm doing here!!
 
 
 # with open('minifig.toml', 'r') as f:
@@ -44,7 +46,7 @@ st.set_page_config(
 
 # st.markdown("Experimenting with themes - bear with me...")
 
-#testing this from Le Wagon site
+#adapted from Le Wagon site
 
 CSS = """
 h1 {
@@ -52,7 +54,9 @@ h1 {
 }
 .stApp {
     background-image: url(https://avatars.githubusercontent.com/u/153445611?v=4);
-    background-size: cover;
+    background-size: contain;
+    background-position: top right;
+    background-repeat: no-repeat;
 }
 """
 
@@ -61,7 +65,9 @@ st.write(f'<style>{CSS}</style>', unsafe_allow_html=True)
 
 #TODO Link HERE to database and search function
 
-st.title('MinifigNET')
+# st.title('MinifigNET')
+st.markdown('<style>h1{font-size: 100px;}</style>', unsafe_allow_html=True)
+st.markdown('# MinifigNET', unsafe_allow_html=True)
 st.write('Can’t remember the names of your LEGO minifigs? Now there’s an app for that!')
 st.text("")
 st.text("")
@@ -72,8 +78,32 @@ st.title('Take a photo of your minifig ...')
 st.write('and we\'ll tell you what it\'s called!')
 picture = st.camera_input('Your photo:')
 
+# resize(picture)
+# if picture:
+#     st.image(picture)
+#     img = Image.open(picture)
+#     img = img.resize((224, 224))
+#     st.image(img)
+
+
 if picture:
     st.image(picture)
+    img = Image.open(picture)
+    width, height = img.size
+    aspect = width / height
+
+    if aspect > 1:
+        new_width = height
+        start_x = (width - height) / 2
+        img = img.crop((start_x, 0, start_x + new_width, height))
+    else:
+        new_height = width
+        start_y = (height - width) / 2
+        img = img.crop((0, start_y, width, start_y + new_height))
+
+    img = img.resize((224, 224))
+    st.image(img)
+
 
 #Let the user upload a photo of their minifig
 st.title(' ... or upload a photo if you prefer')
@@ -81,6 +111,21 @@ uploaded_file = st.file_uploader("Upload your file here...", type=['png', 'jpeg'
 
 if uploaded_file is not None:
     st.image(uploaded_file)
+    img = Image.open(uploaded_file)
+    width, height = img.size
+    aspect = width / height
+
+    if aspect > 1:
+        new_width = height
+        start_x = (width - height) / 2
+        img = img.crop((start_x, 0, start_x + new_width, height))
+    else:
+        new_height = width
+        start_y = (height - width) / 2
+        img = img.crop((0, start_y, width, start_y + new_height))
+
+    img = img.resize((224, 224))
+    st.image(img)
 
 # st.write(f'Thank you! This minifig is called XXX')
 st.markdown('<style>h1{font-size: 30px;}</style>', unsafe_allow_html=True)
@@ -101,6 +146,6 @@ st.write(f'You entered: {user_text}')
 st.text("")
 st.text("")
 st.text("")
-url = "https://www.streamlit.io"
-st.write("Background image courtesy of: [link](%s)" % url)
+# url = "https://www.streamlit.io"
+# st.write("Background image courtesy of: [link](%s)" % url)
 # st.markdown("check out this [link](%s)" % url)
