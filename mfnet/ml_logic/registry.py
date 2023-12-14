@@ -33,19 +33,19 @@ def save_results(params: dict,metrics:dict ) -> None:
 
 def save_model(model: keras.Model) -> None:
     """
-    Saves model on hard drive and on mlflow
+    Saves model on mlflow
     """
     timestamp = time.strftime("%Y%m%d-%H%M%S")
 
-    model_path = os.path.join(os.getcwd(), "cached_data", "models", f"{timestamp}.h5")
-    model.save(model_path)
+    # model_path = os.path.join(os.getcwd(), "cached_data", "models", f"{timestamp}.h5")
+    # model.save(model_path)
 
-    print("✅ Model saved locally")
+    # print("✅ Model saved locally")
 
     mlflow.tensorflow.log_model(
             model=model,
             artifact_path="model",
-            registered_model_name="mfnet proj"
+            registered_model_name=MLFLOW_MODEL_NAME
         )
 
     print("✅ Model saved to MLflow")
@@ -109,6 +109,7 @@ def mlflow_run(func):
         - params (dict, optional): Params to add to the run in MLflow. Defaults to None.
         - context (str, optional): Param describing the context of the run. Defaults to "Train".
     """
+    breakpoint()
     def wrapper(*args, **kwargs):
         mlflow.end_run()
         mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)

@@ -106,4 +106,4 @@ def predict(model,images:list)->list:
     images_np = np.stack(temp,axis=0) / 255
     pred = model.predict(images_np)
 
-    return [(np.argmax(probs)+1,probs[np.argmax(probs)]) for i,probs in enumerate(pred)]
+    return np.array([(np.argmax(probs)+1,probs[np.argmax(probs)]) for i,probs in enumerate(pred)])
