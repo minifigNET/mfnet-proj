@@ -23,7 +23,7 @@ import requests
 
 st.set_page_config(
             page_title="MinifigNET",
-            page_icon="🤖",
+            page_icon="👷‍♂️",
 
             layout="centered", # wide
             initial_sidebar_state="auto") # collapsed
@@ -139,16 +139,15 @@ st.text("")
 #TODO - remove this code, we can return later when we are allowing people to contribute?
 
 st.title('Can you help us to learn more?')
-st.write("Do you know the name of a minifig that we don't have on your system? If so, please let us know!")
+st.write("Do you know the name of your minifig, but find we don't have it on your system? If so, please let us know!")
 
-# user_text = st.text_input('Name:')
-# st.write(f'You entered: {user_text}')
+
 st.text("")
 st.text("")
 
 #based on https://en.wikipedia.org/wiki/Lego_Minifigures_(theme)
 option = st.selectbox(
-    'What class does the minifig belong to?',
+    'What class does your minifig belong to?',
     ('No: 43 - Marvel Collectible Minifigure Series 1 (Set Number: 71039)',
      'No: 42 - Disney 100 Minifigure Series (Set Number: 71038)',
      'No: 41 - Series 24 (Set Number: 71037)',
@@ -158,7 +157,12 @@ option = st.selectbox(
      'No: 37 - Marvel Collectible Minifigure Series 2 (Set Number: 71031)',
      'No: 36 - Looney Tunes Series (Set Number: 71030)',
      'No: 35 - Series 21 (Set Number: 71029)',
-     'No: 34 - Harry Potter Series 2 (Set Number: 71028)'
+     'No: 34 - Harry Potter Series 2 (Set Number: 71028)',
+     'No: 33 - Series 20 (Set Number: 71027)',
+     'No: 32 - DC Super Heroes Series (Set Number: 71026)',
+     'No: 31 - Series 19 (Set Number: 71025)',
+     'No: 30 - Disney Series 2[ (Set Number: 71024)',
+
 
 
 
@@ -171,48 +175,65 @@ option = st.selectbox(
 st.write('You selected Class:', option)
 
 if option == 'No: 43 - Marvel Collectible Minifigure Series 1 (Set Number: 71039)':
-    marvel1_option = st.selectbox('Select character name', ('Minifig 1', 'Minifig 2'))
+    marvel1_option = st.selectbox('Select character name', ('Goliath', 'She-Hulk', 'Echo', 'Kate Bishop', 'Hawkeye', 'Moon Knight', 'Mr. Knight', 'Storm', 'Beast', 'Wolverine', 'Agatha Harkness', 'The Werewolf'))
     st.write('You selected Marvel Collectible Minifigure Series 1:', marvel1_option)
 
 elif option == 'No: 42 - Disney 100 Minifigure Series (Set Number: 71038)':
-    disney_option = st.selectbox('Select character name', ('Minifig 1', 'Minifig 2'))
+    disney_option = st.selectbox('Select character name', ('Pocahontas', 'Aurora', 'Mulan', 'Tiana', 'The Queen', 'Queen of Hearts', 'Dr Facilier', 'Cruella de Vil & Dalmatian puppy', 'Sorcerers Apprentice Mickey', 'Pinocchio', 'Jimmy Cricket', 'Michael', 'Dante', 'Ernesto de la Cruz', 'Stitch 626', 'Oswald the Lucky Rabbit', 'Robin Hood', 'Prince John', 'Baymax'))
     st.write('You selected Disney 100 Minifigure Series:', disney_option)
 
 elif option == 'No: 41 - Series 24 (Set Number: 71037)':
-    series24_option = st.selectbox('Select character name', ('Minifig 1', 'Minifig 2'))
+    series24_option = st.selectbox('Select character name', ('T-Rex Fan Costume', 'Rococo Aristocrat', 'Robot Warrior', 'Potter', 'Newspaper Kid', 'Orc', 'Soccer Referee', 'Falconer', 'Conservationist', 'Carrot Mascot', 'Brown Astronaut and Spacebaby', 'Rockin Horse Rider'))
     st.write('You selected Series 24:', series24_option)
 
 elif option == 'No: 40 - Series 23 (Set Number: 71034)':
-    series23_option = st.selectbox('Select character name', ('Minifig 1', 'Minifig 2'))
+    series23_option = st.selectbox('Select character name', ('Green Dragon Costume', 'Knight of the Yellow Castle' 'Cardboard Robot', 'Popcorn Costume', 'Nutcracker', 'Sugar Fairy', 'Ferry Captain', 'Turkey Costume', 'Wolf Costume', 'Snowman', 'Reindeer Costume', 'Holiday Elf'))
     st.write('You selected Series 23:', series23_option)
 
 elif option == 'No: 39 - Muppets Series (Set Number: 71033)':
-    muppets_option = st.selectbox('Select character name', ('Animal', 'Swedish Chef', 'Miss Piggy', 'Kermit'))
+    muppets_option = st.selectbox('Select character name', ('Statler', 'Waldorf', 'Dr. Bunsen Honeydew', 'Beaker', 'Animal', 'Miss Piggy', 'Kermit the Frog', 'Rowlf the Dog', 'The Swedish Chef', 'Gonzo', 'Janice', 'Fozzie Bear'))
     st.write('You selected Muppets Series:', muppets_option)
 
 elif option == 'No: 38 - Series 22 (Set Number: 71032)':
-    series22_option = st.selectbox('Select character name', ('Minifig 1', 'Minifig 2'))
+    series22_option = st.selectbox('Select character name', ('Figure Skating Champion', 'Snow Guardian', 'Chili Costume Fan', 'Racoon Costume Fan', 'Forest Elf', 'Night Protector', 'Space Creature', 'Robot Repair Tech', 'Troubadour'))
     st.write('You selected Series 22:', series22_option)
 
 elif option == 'No: 37 - Marvel Collectible Minifigure Series 2 (Set Number: 71031)':
-    marvel2_option = st.selectbox('Select character name', ('Minifig 3', 'Minifig 4'))
+    marvel2_option = st.selectbox('Select character name', ('Captain America', 'Winter Soldier', 'The Scarlet Witch', 'The Vision', 'Monica Rambeau', 'Gamora', 'Zombie Hunter Spidey', 'Zombie Captain America', 'Captain Carter', 'TChalla Star Lord', 'Loki', 'Sylvie'))
     st.write('You selected Marvel Collectible Minifigure Series 2:', marvel2_option)
 
 elif option == 'No: 36 - Looney Tunes Series (Set Number: 71030)':
-    looney_option = st.selectbox('Select character name', ('Minifig 1', 'Minifig 2'))
+    looney_option = st.selectbox('Select character name', ('Bugs Bunny', 'Lola Bunny', 'Daffy Duck', 'Tweety Bird', 'Sylvester', 'Road Runner', 'Wile E. Coyote', 'Porky Pig', 'Petunia Pig', 'Speedy Gonzales', 'Tasmanian Devil', 'Marvin the Martian'))
     st.write('You selected Looney Tunes Series:', looney_option)
 
 elif option == 'No: 35 - Series 21 (Set Number: 71029)':
-    series21_option = st.selectbox('Select character name', ('Minifig 1', 'Minifig 2'))
+    series21_option = st.selectbox('Select character name', ('Centaur Warrior', 'Shipwreck Survivor', 'Pug Costume Guy', 'Beekeeper', 'Ladybug Girl', 'Violin Kid', 'Alien', 'Space Police Guy', 'Ancient Warrior', 'Airplane Girl', 'Cabaret Singer', 'Paddle Surfer'))
     st.write('You selected Disney 100 Minifigure Series:', series21_option)
 
 elif option == 'No: 34 - Harry Potter Series 2 (Set Number: 71028)':
-    harry_option = st.selectbox('Select character name', ('Harry', 'Hermione', 'Ron'))
-    st.write('You selected Harry Potter Series 2:', harry_option)
+    harry2_option = st.selectbox('Select character name', ('Harry Potter', 'Hermione Granger™', 'Ron Weasley™', 'Ginny Weasley', 'Fred Weasley', 'George Weasley', 'Luna Lovegood™', 'Moaning Myrtle', 'Griphook', 'Headmaster Albus Dumbledore™', 'Professor Sprout', 'Neville Longbottom™', 'Kingsley Shacklebolt', 'Bellatrix Lestrange', 'Lily Potter', 'James Potter'))
+    st.write('You selected Harry Potter Series 2:', harry2_option)
 
+elif option == 'No: 33 = Series 20 (Set Number: 71027)':
+    series20_option = st.selectbox('Select character name', ('Piñata boy', 'Pajama girl', 'Drone boy', '80s musician', 'Peapod costume girl', 'Sea rescuer', 'Viking', 'Pirate girl', 'Martial arts boy', 'Breakdancer', 'Llama costume girl', 'Brick costume guy', 'Athlete', 'Space fan', 'Super warrior', 'Tournament knight'))
+    st.write('You selected Series 20:', series20_option)
 
+elif option == 'No: 32 - DC Super Heroes Series (Set Number: 71026)':
+    dc_super_option = st.selectbox('Select character name', ('Batman', 'Superman', 'The Joker', 'Huntress', 'Metamorpho', 'Sinestro', 'Green Lantern', 'Mr. Miracle', 'Bat-Mite', 'Star Girl', 'Cheetah', 'Aquaman', 'Cyborg', 'BUMBLEBEE', 'The Flash', 'Wonder Woman'))
+    st.write('You selected DC Super Heroes Series:', series20_option)
 
+elif option == 'No: 31 - Series 19 (Set Number: 71025)':
+    series19_option = st.selectbox('Select character name', ('Dog Sitter', 'Video Game Champ', 'Shower Guy', 'Rugby Player', 'Bear Costume Guy', 'Pizza Costume Guy', 'Galactic Bounty Hunter', 'Monkey King', 'Programmer', 'Gardener', 'Fire Fighter', 'Mountain Biker', 'Fright Knight', 'Mummy Queen', 'Jungle Explorer', 'Fox Costume Girl'))
+    st.write('You selected Series 19:', series19_option)
 
+elif option == 'No: 30 - Disney Series 2[ (Set Number: 71024)':
+    disney2_option = st.selectbox('Select character name', ('Vintage Mickey', 'Vintage Minnie', 'Hercules', 'Jack Skellington', 'Scrooge McDuck', 'Huey, Dewey', 'Louie', 'Chip', 'Dale', 'Jasmine', 'Jafar', 'Hades', 'Elsa', 'Anna', 'Sally', 'Edna', 'Frozone'))
+    st.write('You selected Disney Series 2:', disney2_option)
+
+st.text("")
+st.text("")
+user_text = st.text_input("Can't find your minifig in the dropdown menus? Enter all the details you have here:")
+st.write(f'You entered: {user_text}')
 
 
 #TODO add drop dwn with all classes and names - api response , hard code to start
