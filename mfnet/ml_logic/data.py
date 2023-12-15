@@ -31,38 +31,18 @@ def get_data(img_resolution=(224,224)):
     X_train = np.stack(images,axis=0)
     X_test = np.stack(tests,axis=0)
 
-    """Get y train and test from dataframes and make values starts from 0"""
+    """Get y train and test from dataframes"""
 
-    y_train = np.array(index['class_id'])-1
-    y_test = np.array(test['class_id'])-1
+    y_train = np.array(index['class_id'])
+    y_test = np.array(test['class_id'])
+
+    print("✅ data imported")
 
     return X_train,y_train,X_test,y_test
 
-def data_augmentation(X_train,y_train,X_test,y_test):
+def data_preprocessing(X_train,y_train,X_test,y_test):
 
-    """Making the imagedatagenerator for train set"""
+    """Returns standardized data"""
+    print("✅ data preprocessed")
 
-    train_datagen = ImageDataGenerator(
-    rescale = 1./255,
-    featurewise_center = False,
-    featurewise_std_normalization = False,
-    rotation_range = 10,
-    width_shift_range = 0.1,
-    height_shift_range = 0.1,
-    horizontal_flip = True,
-    zoom_range = (0.8, 1.2),
-    )
-
-    """Making the imagedatagenerator for test set"""
-
-    test_datagen = ImageDataGenerator(
-        rescale = 1./255
-    )
-
-    """Making the actual variables that are going to be trained and validated"""
-
-    train_flow = train_datagen.flow(X_train, y_train, batch_size = 16)
-
-    valid_flow = test_datagen.flow(X_test, y_test, batch_size = 1)
-
-    return train_flow,valid_flow
+    return X_train/255,y_train-1,X_test/255,y_test-1

@@ -161,3 +161,10 @@ cython_debug/
 
 # MacOS
 .DS_Store
+# Windows
+thumbs.db
+
+# Pickle, models
+*.pkl
+*.pickle
+*.h5

@@ -1,0 +1,7 @@
+import os
+
+# VARIABLES
+
+MLFLOW_TRACKING_URI = os.environ.get("MLFLOW_TRACKING_URI")
+MLFLOW_MODEL_NAME = os.environ.get("MLFLOW_MODEL_NAME")
+MLFLOW_EXPERIMENT = os.environ.get("MLFLOW_EXPERIMENT")
