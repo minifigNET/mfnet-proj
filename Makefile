@@ -53,3 +53,7 @@ run_workflow:
 
 run_api:
 	uvicorn mfnet.api.fast:app --reload
+
+start_web_app:
+	streamlit run website/app.py
+

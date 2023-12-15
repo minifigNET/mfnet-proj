@@ -11,11 +11,11 @@ class_id,lego_ids,lego_names,minifigure_name
 10,[75264],"[""Kylo Ren's Shuttle Microfighter""]",KYLO REN
 11,[75254],"[""AT-ST Raider from The Mandalorian""]",THE MANDALORIAN
 12,[75254],"[""AT-ST Raider from The Mandalorian""]",CARA DUNE
-13,[75254],"[""AT-ST Raider from The Mandalorian""]",KLATOOINIAN RAIDER 1
-14,[75254],"[""AT-ST Raider from The Mandalorian""]",KLATOOINIAN RAIDER 2
+13,[75254],"[""AT-ST Raider from The Mandalorian""]",KLATOOINIAN RAIDER WITH HELMET
+14,[75254],"[""AT-ST Raider from The Mandalorian""]",KLATOOINIAN RAIDER WITH ARMOR
 15,[76128],"[""Molten Man Battle""]",MYSTERIO
 16,[76128],"[""Molten Man Battle""]",FIREFIGHTER
-17,[76128],"[""Molten Man Battle""]",SPIDER-MAN
+17,[76128],"[""Molten Man Battle""]",SPIDER-MAN - BLACK AND GRAY SUIT
 18,[75950],"[""Aragog's Lair""]",HARRY POTTER
 19,[75950],"[""Aragog's Lair""]",RON WEASLEY
 20,[76162],"[""Black Widow's Helicopter Chase""]",BLACK WIDOW
@@ -25,7 +25,7 @@ class_id,lego_ids,lego_names,minifigure_name
 24,[76123],"[""Captain America: Outriders Attack""]",OUTRIDER 1
 25,[76123],"[""Captain America: Outriders Attack""]",OUTRIDER 2
 26,[75926],"[""Pteranodon Chase""]",OWEN GRADY
-27,[75926],"[""Pteranodon Chase""]",TRACKER TRAQUEUR RASTREADOR
+27,[75926],"[""Pteranodon Chase""]",ACU TRACKER - FEMALE
 28,[76125],"[""Iron Man Hall of Armor""]",IRON MAN MK 1
 29,[76125],"[""Iron Man Hall of Armor""]",IRON MAN MK 5
 30,[76125],"[""Iron Man Hall of Armor""]",IRON MAN MK 41
