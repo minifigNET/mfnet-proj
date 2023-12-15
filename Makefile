@@ -57,3 +57,5 @@ run_api:
 start_web_app:
 	streamlit run website/app.py
 
+start_api:
+	uvicorn mfnet.api.api:api --reload
