@@ -51,7 +51,7 @@ def train_model(
         X_train,
         y_train,
         validation_data=(X_test, y_test),
-        epochs=5,
+        epochs=100,
         verbose=1,
         shuffle=True,
         batch_size=4,
