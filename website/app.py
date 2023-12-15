@@ -3,7 +3,7 @@
 #Notes
 ######
 
-#NOTE TO TEAM - TO OPEN THE FILE ONLINE: streamlit run app.py
+#TO OPEN THE FILE ONLINE: streamlit run app.py
 #or now: https://minifignet.streamlit.app
 
 #Lego colours: https://usercontent.flodesk.com/de8064d5-0183-4c90-a0f9-0da438a65bce/upload/37cfed05-9017-4e5b-b5b8-ae11a341f132.pdf
@@ -16,6 +16,7 @@ import base64
 import toml
 from PIL import Image
 import requests
+import html
 
 #####################
 #Set up the page style
@@ -49,18 +50,14 @@ st.markdown(f'<style>{CSS}</style>', unsafe_allow_html=True)
 st.markdown('<div class="topImage"></div>', unsafe_allow_html=True)
 st.write(f'<style>{CSS}</style>', unsafe_allow_html=True)
 
-#TODO fix the image link above
-
-
 
 
 #####################
 #Header
 #####################
 
-# st.title('MinifigNET')
-st.markdown('<style>h1{font-size: 200px;}</style>', unsafe_allow_html=True)
-st.markdown('# MinifigNET', unsafe_allow_html=True)
+st.title('MinifigNET')
+
 st.write('Can’t remember the names of your LEGO minifigs? Now there’s an app for that!')
 st.text("")
 st.text("")
@@ -102,7 +99,6 @@ picture = st.camera_input('Your photo:')
 if picture:
     resize_224(picture)
 
-
 #############################################
 #Let the user upload a photo of their minifig
 #############################################
@@ -114,7 +110,6 @@ if uploaded_file is not None:
     resize_224(uploaded_file)
 
 
-
 #####################################################
 #check the image against the model, return the answer
 #####################################################
@@ -123,8 +118,10 @@ if uploaded_file is not None:
 # OUR_URL = 'https://taxifare.lewagon.ai/predict' #TODO - change this to our model
 # response = requests.get(wagon_cab_api_url, params=params) #TODO - change this to our model
 # prediction = response.json()
-# pred = prediction['fare'] #TODO - change this to our model
+# pred = prediction['minifig'] #TODO - change this to our model
 # st.header(f'Your minifig is a: ${whatever it is)}')
+
+
 
 st.markdown('<style>h1{font-size: 30px;}</style>', unsafe_allow_html=True)
 st.markdown('# Thank you! This minifig is called XXX', unsafe_allow_html=True)
@@ -136,11 +133,11 @@ st.text("")
 #ask for input to build our database
 ####################################
 
-#TODO - remove this code, we can return later when we are allowing people to contribute?
+#TODO - decide whether we should remove this code, we can return it later when we are allowing people to contribute?
 
 st.title('Can you help us to learn more?')
-st.write("Do you know the name of your minifig, but find we don't have it on your system? If so, please let us know!")
-
+st.write("Do you know the name of a minifig, but find we don't have it on your system?")
+st.write("If so, please let us know!")
 
 st.text("")
 st.text("")
@@ -162,14 +159,6 @@ option = st.selectbox(
      'No: 32 - DC Super Heroes Series (Set Number: 71026)',
      'No: 31 - Series 19 (Set Number: 71025)',
      'No: 30 - Disney Series 2[ (Set Number: 71024)',
-
-
-
-
-
-
-
-
      ))
 
 st.write('You selected Class:', option)
@@ -232,11 +221,15 @@ elif option == 'No: 30 - Disney Series 2[ (Set Number: 71024)':
 
 st.text("")
 st.text("")
+
+def sanitize_input(input_str):
+    sanitized_str = html.escape(input_str)
+    return sanitized_str
+
 user_text = st.text_input("Can't find your minifig in the dropdown menus? Enter all the details you have here:")
-st.write(f'You entered: {user_text}')
+sanitized_input = sanitize_input(user_text)
+st.write(f'Thank you! You entered: {user_text}. We will add this to our database.')
 
-
-#TODO add drop dwn with all classes and names - api response , hard code to start
 
 #########################################
 #code for adding any image copyright info
