@@ -29,44 +29,32 @@ API_URL = os.getenv('API_URL')
 
 st.set_page_config(
     page_title="MinifigNET",
-    page_icon="👷‍♂️",
+    page_icon="https://cdn-icons-png.flaticon.com/512/1674/1674274.png",
 
-    layout="centered",  # wide
-    initial_sidebar_state="auto")  # collapsed
+    layout="centered")
 
 
-CSS = """
-h1 {
-    color: red;
-}
-# .stApp {
-#     background-image: url(https://avatars.githubusercontent.com/u/153445611?v=4);
-#     background-size: contain;
-#     background-position: top right;
-#     background-repeat: no-repeat;
-# }
-# .topImage {
-#     background-image: url(header.png);
-#     background-size: contain;
-#     height: 200px;  # adjust as needed
-# }
-"""
-st.markdown(f'<style>{CSS}</style>', unsafe_allow_html=True)
-st.markdown('<div class="topImage"></div>', unsafe_allow_html=True)
-st.write(f'<style>{CSS}</style>', unsafe_allow_html=True)
+st.write("""
+    <style>
+        h1 {
+            color: red;
+            font-size: 96px !important;
+        }
+        h2 {
+            color: red;
+        }
+    </style>""", unsafe_allow_html=True)
 
 
 #####################
 # Header
 #####################
 
+st.title('MinifigNET ![](https://lh3.googleusercontent.com/u/2/drive-viewer/AEYmBYR3Q5FtiJs9Eo-azS4c1phN_j0FsKqwYQbE7u259ys-0dkmPINtwIaJwfZN1YezGMfppva0383ja1ncwtaBC223GYDWqw=w2940-h1538 "Ho ho ho!")')
 
-# st.title('MinifigNET')
-st.image('header_image_big.jpg', width=700)
-st.image('santa_minifig.jpg', width=300)
-st.markdown('''## Can’t remember the names of your LEGO minifigs? Now there’s an app for that! ''',
+st.markdown('''### Can’t remember the names of your LEGO minifigs? Now there’s an app for that! ''',
             unsafe_allow_html=True)
-# st.write('Can’t remember the names of your LEGO minifigs? Now there’s an app for that!')
+
 st.text("")
 st.text("")
 st.text("")
@@ -101,7 +89,7 @@ def resize_224(picture):
 #####################
 
 
-st.title('Take a photo of your minifig ...')
+st.markdown('## Take a photo of your minifig ...')
 st.write('and we\'ll tell you what it\'s called!')
 st.write(' Please try to take a clear photo, against a white background')
 picture = st.camera_input('Your photo:')
@@ -114,7 +102,7 @@ if picture:
 # Let the user upload a photo of their minifig
 #############################################
 
-st.title(' ... or upload a photo if you prefer')
+st.markdown('## ... or upload a photo if you prefer')
 uploaded_file = st.file_uploader(
     "Upload your file here...", type=['png', 'jpeg', 'jpg'])
 
@@ -150,7 +138,7 @@ if picture:
 # st.header(f'Your minifig is a: ${whatever it is)}')
 
 
-st.markdown('<style>h1{font-size: 30px;}</style>', unsafe_allow_html=True)
+# st.write('<style>h1{font-size: 30px;}</style>', unsafe_allow_html=True)
 if res:
     st.markdown(
         f'# Thank you! This minifig is called {res.json()["class_name"]}', unsafe_allow_html=True)
@@ -164,7 +152,7 @@ st.text("")
 
 # TODO - decide whether we should remove this code, we can return it later when we are allowing people to contribute?
 
-st.title('Can you help us to learn more?')
+st.markdown('## Can you help us to learn more?')
 st.write("You know the name of your minifig, but we don't have it in our database?")
 st.write("If so, please help us out!")
 
