@@ -58,4 +58,4 @@ start_web_app:
 	streamlit run website/app.py
 
 start_api:
-	uvicorn mfnet.api.api:api --reload
+	uvicorn mfnet.api.api:api --reload --port $(API_PORT)
