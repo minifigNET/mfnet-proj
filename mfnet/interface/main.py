@@ -176,7 +176,7 @@ def pred(X_pred: np.ndarray = None, y_true: int = None) -> np.ndarray:
         X_pred = np.expand_dims(X_test[sample_index], axis=0)
         y_true = y_test[sample_index]
     else:
-        X_pred = np.expand_dims(X_pred, axis=0)
+        X_pred = np.expand_dims(X_pred, axis=0) / 255.0
 
     metadata = pd.read_csv(os.path.join(cwr, "raw_data", "metadata.csv"), index_col='class_id')
 
@@ -185,7 +185,7 @@ def pred(X_pred: np.ndarray = None, y_true: int = None) -> np.ndarray:
 
     y_preds = model.predict(X_pred)[0]
     y_pred_max = np.max(y_preds)
-    y_pred_class = np.argmax(y_preds)
+    y_pred_class = np.argmax(y_preds) + 1
     y_pred_metadata = metadata.loc[y_pred_class]
     y_pred_metadata['prob'] = y_pred_max
 
