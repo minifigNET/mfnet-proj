@@ -168,3 +168,6 @@ thumbs.db
 *.pkl
 *.pickle
 *.h5
+
+# Prediction images
+raw_data/preds/*.png

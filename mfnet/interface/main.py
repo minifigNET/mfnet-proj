@@ -183,19 +183,21 @@ def pred(X_pred: np.ndarray = None, y_true: int = None) -> np.ndarray:
     model = load_model()
     assert model is not None
 
-    y_preds = model.predict(X_pred)
+    y_preds = model.predict(X_pred)[0]
     y_pred_max = np.max(y_preds)
     y_pred_class = np.argmax(y_preds)
     y_pred_metadata = metadata.loc[y_pred_class]
+    y_pred_metadata['prob'] = y_pred_max
 
     print("\nℹ️  Prediction done:\n", y_preds)
-    print(y_pred_max)
     print(y_pred_metadata)
 
     if y_true:
+        print("\n✅ Correct match" if y_pred_class == y_true else "\n⛔️ Wrong match")
+
         y_true_metadata = metadata.loc[y_true]
-        print("\ny_true:\n", y_true_metadata)
-        print("\n✅ Success" if y_pred_class == y_true else "❌ Error")
+        y_true_metadata['prob'] = y_preds[y_true]
+        print("y_true:\n", y_true_metadata)
 
     return y_pred_metadata
 

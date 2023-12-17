@@ -113,7 +113,7 @@ if photo:
     photo = resize_224(photo)
     st.image(photo)
 
-    with st.spinner("Uploading..."):
+    with st.spinner("Analyzing..."):
         # Get bytes from the file buffer
         img_bytes = photo.tobytes()
 
@@ -122,13 +122,22 @@ if photo:
                                  files={'img': img_bytes})
 
         if response.status_code == 200:
-            print("✅ Image sent successfully.")
+            print("✅ Image analyzed successfully.")
+            # prediction = {
+            #     'probability': 0.99,
+            #     'minifigure_name': "RON WEASLEY",
+            #     'set_id': "99999",
+            #     'set_name': "ARAGOG LAIR",
+            #     'class_id': 99
+            # }
+            prediction = response.json()
+            st.markdown('### This minifig is called:')
+            st.write(f'{prediction["minifigure_name"]} ({prediction["probability"]:2.0%} sure). Tada! 😊')
 
         else:
             st.markdown("**Oops**, something went wrong 😓 Please try again.")
             print(response.status_code, response.content)
 
-    st.markdown(f'### This minifig is called: {response.json()["class_name"]}. Tada!', unsafe_allow_html=True)
 
 st.text("")
 st.text("")
