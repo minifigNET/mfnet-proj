@@ -18,16 +18,17 @@ def save_results(params: dict, metrics: dict) -> None:
     timestamp = time.strftime("%Y%m%d-%H%M%S")
 
     # Save params locally
+    cwd = os.getcwd()
     if params is not None:
         params_path = os.path.join(
-            os.getcwd(), "cached_data", "params", timestamp + ".pickle")
+            cwd, "cached_data", "params", timestamp + ".pickle")
         with open(params_path, "wb") as file:
             pickle.dump(params, file)
 
     # Save metrics locally
     if metrics is not None:
         metrics_path = os.path.join(
-            os.getcwd(), "cached_data", "metrics", timestamp + ".pickle")
+            cwd, "cached_data", "metrics", timestamp + ".pickle")
         with open(metrics_path, "wb") as file:
             pickle.dump(metrics, file)
 
