@@ -288,9 +288,8 @@ def sanitize_input(input_str):
     sanitized_str = html.escape(input_str)
     return sanitized_str
 
-
-user_text = st.text_input(
-    "Can't find your minifig in the dropdown menus? Enter all the details you have here:")
+st.write("Can't find your minifig in the dropdown menus? Enter all the details you have here:")
+user_text = st.text_input("Name, series, set number - any information is helpful!")
 sanitized_input = sanitize_input(user_text)
 st.write(
     f'Thank you! You entered: {user_text}. We will add this to our database.')
