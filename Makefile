@@ -1,3 +1,6 @@
+default:
+	nohup uvicorn mfnet.api.api:api --reload --port $(API_PORT) &
+
 create_local_env_with_as_deps: create_local_env install_apple_silicon_deps
 create_local_env_with_mi_deps: create_local_env install_mac_intel_deps
 create_local_env_with_linux_deps: create_local_env install_linux_deps
