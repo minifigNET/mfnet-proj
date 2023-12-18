@@ -91,14 +91,14 @@ st.write('and we\'ll tell you what it\'s called!')
 if st.button("📸 Open camera"):
     if "upload" in st.session_state:
         del st.session_state.upload
-    st.camera_input("ℹ️ Please try to take a clear photo, against a white background, and center your subject 🎯", key="capture")
+    st.camera_input("ℹ️ Please try to take a clear photo, against a white background, and centre your subject 🎯", key="capture")
 
 
 #############################################
 # Let the user upload a photo of their minifig
 #############################################
 st.markdown('## ... or upload one if you prefer')
-uploaded_file = st.file_uploader("Select a photo (preferably with the subject in the center):", type=[
+uploaded_file = st.file_uploader("Select a photo (preferably with the subject in the centre):", type=[
                                  'png', 'jpeg', 'jpg'], key="upload")
 
 #####################################################
