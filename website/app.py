@@ -88,8 +88,8 @@ if st.button("📸 Open camera"):
 # Let the user upload a photo of their minifig
 #############################################
 st.markdown('## ... or upload one if you prefer')
-uploaded_file = st.file_uploader("Select a photo (preferably with the subject in the centre):", type=[
-                                 'png', 'jpeg', 'jpg'], key="upload")
+st.file_uploader("Select a photo (preferably with the subject in the centre):",
+                 type=['png', 'jpeg', 'jpg'], key="upload")
 
 #####################################################
 # check the image against the model, return the answer
