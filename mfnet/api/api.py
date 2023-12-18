@@ -47,6 +47,9 @@ def add_img_train(label:int):
     files_count = len(os.listdir(destination_folder))
     final_file = os.path.join(destination_folder,f"{files_count+1}.png")
     os.rename(source, final_file)
+    """
+    Adds path and label to the train csv then tries training a new, better model
+    """
     df = pd.DataFrame({
         'path':[f'added_data/{files_count+1}.png'],
         'class_id':[label]
@@ -54,3 +57,13 @@ def add_img_train(label:int):
     csv_path = os.path.join(os.getcwd(), "raw_data", "index.csv")
     df.to_csv(f"{csv_path}",mode='a', header=False, index=False)
     return {"Workflow": train_flow()}
+
+@api.get("/retrain")
+def retrain():
+    return {"Workflow": train_flow()}
+
+# @api.get("/add_class")
+# def add_class(label:int,metadata:str):
+#     """
+#     Splits images 70% train and 30% test
+#     """
