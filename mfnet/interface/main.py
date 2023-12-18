@@ -164,21 +164,21 @@ def pred(X_pred: np.ndarray = None, y_true: int = None) -> np.ndarray:
 
     print("\n⭐️ Use case: predict")
 
-    cwr = os.getcwd()
+    cwd = os.getcwd()
     if X_pred is None:
-        with open(os.path.join(cwr, "cached_data", "preprocessed", 'X_test.pkl'), 'rb') as file:
+        with open(os.path.join(cwd, "cached_data", "preprocessed", 'X_test.pkl'), 'rb') as file:
             X_test = pickle.load(file)
 
-        with open(os.path.join(cwr, "cached_data", "preprocessed", 'y_test.pkl'), 'rb') as file:
+        with open(os.path.join(cwd, "cached_data", "preprocessed", 'y_test.pkl'), 'rb') as file:
             y_test = pickle.load(file)
 
         sample_index = np.random.randint(len(X_test))
         X_pred = np.expand_dims(X_test[sample_index], axis=0)
-        y_true = y_test[sample_index]
+        y_true = y_test[sample_index] + 1
     else:
         X_pred = np.expand_dims(X_pred, axis=0) / 255.0
 
-    metadata = pd.read_csv(os.path.join(cwr, "raw_data", "metadata.csv"), index_col='class_id')
+    metadata = pd.read_csv(os.path.join(cwd, "raw_data", "metadata.csv"), index_col='class_id')
 
     model = load_model()
     assert model is not None
@@ -196,7 +196,7 @@ def pred(X_pred: np.ndarray = None, y_true: int = None) -> np.ndarray:
         print("\n✅ Correct match" if y_pred_class == y_true else "\n⛔️ Wrong match")
 
         y_true_metadata = metadata.loc[y_true]
-        y_true_metadata['prob'] = y_preds[y_true]
+        y_true_metadata['prob'] = y_preds[y_true-1]
         print("y_true:\n", y_true_metadata)
 
     return y_pred_metadata

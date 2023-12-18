@@ -171,3 +171,6 @@ thumbs.db
 
 # Prediction images
 raw_data/preds/*.png
+
+# Secrets
+secrets.*

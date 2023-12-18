@@ -1,4 +1,3 @@
-
 ######
 # Notes
 ######
@@ -6,22 +5,13 @@
 # TO OPEN THE FILE ONLINE: streamlit run app.py
 # or now: https://minifignet.streamlit.app
 
-# Lego colours: https://usercontent.flodesk.com/de8064d5-0183-4c90-a0f9-0da438a65bce/upload/37cfed05-9017-4e5b-b5b8-ae11a341f132.pdf
-
 ########
 # Imports
 ########
 import streamlit as st
-import base64
-import toml
 from PIL import Image
 import requests
 import html
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-API_URL = os.getenv('API_URL')
 
 #####################
 # Set up the page style
@@ -108,6 +98,7 @@ uploaded_file = st.file_uploader("Select a photo (preferably with the subject in
 photo = st.session_state.capture if "capture" in st.session_state \
     else st.session_state.upload if "upload" in st.session_state and st.session_state.upload \
     else None
+
 if photo:
     st.markdown("## Now let's analyze your photo")
     photo = resize_224(photo)
@@ -115,19 +106,19 @@ if photo:
 
     with st.spinner("Analyzing..."):
         # Get bytes from the file buffer
-        img_bytes = photo.tobytes()
+        img_bytes = photo.convert("RGB").tobytes()
 
         # Make request to API
-        response = requests.post(f'{API_URL}/predict',
+        response = requests.post(f'{st.secrets.API_URL}/predict',
                                  files={'img': img_bytes})
 
         if response.status_code == 200:
             print("✅ Image analyzed successfully.")
             # prediction = {
             #     'probability': 0.99,
-            #     'minifigure_name': "RON WEASLEY",
+            #     'minifigure_name': "SANTA",
             #     'set_id': "99999",
-            #     'set_name': "ARAGOG LAIR",
+            #     'set_name': "CHRISTMAS SET",
             #     'class_id': 99
             # }
             prediction = response.json()
@@ -288,6 +279,7 @@ def sanitize_input(input_str):
     sanitized_str = html.escape(input_str)
     return sanitized_str
 
+
 st.write("Can't find your minifig in the dropdown menus? Enter all the details you have here:")
 user_text = st.text_input("Name, series, set number - any information is helpful!")
 sanitized_input = sanitize_input(user_text)
@@ -302,6 +294,3 @@ st.write(
 st.text("")
 st.text("")
 st.text("")
-# url = "https://www.streamlit.io"
-# st.write("Background image courtesy of: [link](%s)" % url)
-# st.markdown("check out this [link](%s)" % url)
