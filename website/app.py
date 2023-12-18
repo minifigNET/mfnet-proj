@@ -115,7 +115,7 @@ if photo:
 
     with st.spinner("Analyzing..."):
         # Get bytes from the file buffer
-        img_bytes = photo.tobytes()
+        img_bytes = photo.convert("RGB").tobytes()
 
         # Make request to API
         response = requests.post(f'{API_URL}/predict',
@@ -125,9 +125,9 @@ if photo:
             print("✅ Image analyzed successfully.")
             # prediction = {
             #     'probability': 0.99,
-            #     'minifigure_name': "RON WEASLEY",
+            #     'minifigure_name': "SANTA",
             #     'set_id': "99999",
-            #     'set_name': "ARAGOG LAIR",
+            #     'set_name': "CHRISTMAS SET",
             #     'class_id': 99
             # }
             prediction = response.json()
@@ -287,6 +287,7 @@ st.text("")
 def sanitize_input(input_str):
     sanitized_str = html.escape(input_str)
     return sanitized_str
+
 
 st.write("Can't find your minifig in the dropdown menus? Enter all the details you have here:")
 user_text = st.text_input("Name, series, set number - any information is helpful!")
