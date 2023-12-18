@@ -110,7 +110,7 @@ def train(learning_rate=0.0001):
         y_test,
         patience=10
     )
-    val_accuracy = np.max(history.history['accuracy'])
+    val_accuracy = np.max(history.history['val_accuracy'])
     params = dict(
         context="train",
         label_count=len(y_train),
@@ -155,6 +155,8 @@ def evaluate(stage: str = "Production"):
     save_results(params=params, metrics=metrics_dict)
 
     print("✅ evaluate() done \n")
+
+    return metrics_dict["accuracy"]
 
 
 def pred(X_pred: np.ndarray = None, y_true: int = None) -> np.ndarray:
@@ -203,7 +205,7 @@ def pred(X_pred: np.ndarray = None, y_true: int = None) -> np.ndarray:
 
 
 if __name__ == '__main__':
-    preprocess()
-    train()
+    # preprocess()
+    # train()
     evaluate()
-    pred()
+    # pred()

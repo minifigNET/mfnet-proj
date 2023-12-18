@@ -15,37 +15,10 @@ def save_results(params: dict, metrics: dict) -> None:
         mlflow.log_metrics(metrics)
     print("✅ Results saved on MLflow")
 
-    timestamp = time.strftime("%Y%m%d-%H%M%S")
-
-    # Save params locally
-    cwd = os.getcwd()
-    if params is not None:
-        params_path = os.path.join(
-            cwd, "cached_data", "params", timestamp + ".pickle")
-        with open(params_path, "wb") as file:
-            pickle.dump(params, file)
-
-    # Save metrics locally
-    if metrics is not None:
-        metrics_path = os.path.join(
-            cwd, "cached_data", "metrics", timestamp + ".pickle")
-        with open(metrics_path, "wb") as file:
-            pickle.dump(metrics, file)
-
-    print("✅ Results saved locally")
-
-
 def save_model(model: keras.Model) -> None:
     """
     Saves model on mlflow
     """
-    timestamp = time.strftime("%Y%m%d-%H%M%S")
-
-    model_path = os.path.join(
-        os.getcwd(), "cached_data", "models", f"{timestamp}.h5")
-    model.save(model_path)
-
-    print("✅ Model saved locally")
 
     mlflow.tensorflow.log_model(
         model=model,
