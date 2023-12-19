@@ -110,7 +110,7 @@ if photo:
         img_bytes = photo.convert("RGB").tobytes()
 
         # Make request to API
-        response = requests.post('http://127.0.0.1:8000/predict',
+        response = requests.post(f'{st.secrets.API_URL}/predict',
                                  files={'img': img_bytes,
                                         })
 
@@ -292,7 +292,7 @@ user_text = st.text_input("Set Number:")
 minifig_set = sanitize_input(user_text)
 
 st.file_uploader("Select a photo (preferably with the subject in the centre):", type=[
-                                 'png', 'jpeg', 'jpg'],accept_multiple_files=True,key='class_upload')
+    'png', 'jpeg', 'jpg'], accept_multiple_files=True, key='class_upload')
 photo_classes = st.session_state.class_upload if "class_upload" in st.session_state and st.session_state.class_upload \
     else None
 
@@ -306,13 +306,13 @@ if photo_classes and minifig_series and minifig_name and minifig_name:
         }
         files = [("imgs", (f"photo{i}", photo)) for i, photo in enumerate(photos)]
         # st.write(files)
-        response = requests.post('http://127.0.0.1:8000/add_class',
-                                        params = data,
-                                        files = files
-                                        )
+        response = requests.post(f'{st.secrets.API_URL}/add_class',
+                                 params=data,
+                                 files=files
+                                 )
         if response.status_code == 200:
             st.markdown('### Added to database:')
-            st.write( 'Tada! 😊')
+            st.write('Tada! 😊')
             photo_classes.clear()
         else:
             st.markdown("**Oops**, something went wrong 😓 Please try again.")
