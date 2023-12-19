@@ -201,23 +201,50 @@ class_options = [
                                                         'Jafar', 'Hades', 'Elsa', 'Anna', 'Sally', 'Edna', 'Frozone'])
 ]
 
-selected_class = st.selectbox('What class does your minifig belong to?', [option[0] for option in class_options])
+# selected_class = st.selectbox('What class does your minifig belong to?', [option[0] for option in class_options])
 
 
-for option, characters in class_options:
-    if selected_class == option:
-        selected_character = st.selectbox('What is the character name?', characters)
-        st.write(f'You selected {option}:', selected_character)
-        break
+# for option, characters in class_options:
+#     if selected_class == option:
+#         selected_character = st.selectbox('What is the character name?', characters)
+#         st.write(f'You selected {option}:', selected_character)
+#         break
 
-st.text("")
-st.text("")
+# st.text("")
+# st.text("")
+
+## NEW DROPDOWN INCLUDING API CALL
+
+response = requests.get('http://127.0.0.1:8000/retrieve_metadata')
+
+if response.status_code == 200:
+    data = response.json()
+
+    selected_data = st.selectbox('Select data:', data)
+
+    st.write(f'You selected: {selected_data}')
+
+if selected_data:
+    data = {
+            "class": selected_data[0]
+        }
+
+    response = requests.post('http://127.0.0.1:8000/add_img_train',
+                                        params = data
+                                        )
+    if response.status_code == 200:
+        st.markdown('### Added to database:')
+        st.write("Tada! Thank you, we've added that image to the database. 😊")
+
+    # else:
+    #     st.markdown("**Oops**, something went wrong 😓 Please try again.")
+    #     print(response.status_code, response.content)
+
 
 
 def sanitize_input(input_str):
     sanitized_str = html.escape(input_str)
     return sanitized_str
-
 
 st.write("Can't find your minifig in the dropdown menus? Please send us at least 8 photos from different angles and all the details you have. Name, series, set number - any information is helpful!")
 
