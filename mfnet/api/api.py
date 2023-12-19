@@ -101,8 +101,71 @@ def add_img_train(label: int):
 def retrain():
     return {"Workflow": train_flow()}
 
-# @api.get("/add_class")
-# def add_class(label:int,metadata:str):
-#     """
-#     Splits images 70% train and 30% test
-#     """
+
+@api.post("/add_class")
+async def add_class(imgs:list,
+                    lego_ids:str,
+                    lego_names:str,
+                    minifigure_name:str
+                    ):
+    """
+    Splits images 3/4 train and 1/4 test
+    Saves images in added_data or test folder
+    adds path and class_id to test and train csv
+    add new class in metadata csv
+    Force new model into production
+    """
+    test = imgs[::4]
+    train = [img for img in imgs if img not in test]
+    cwd = os.getcwd()
+    test_csv_path = os.path.join(os.getcwd(), "raw_data", "test.csv")
+    train_csv_path = os.path.join(os.getcwd(), "raw_data", "index.csv")
+    metadata_csv_path = os.path.join(cwd, "raw_data", "metadata.csv")
+    metadata = pd.read_csv(metadata_csv_path, index_col='class_id')
+    label = max(metadata.index)+1
+
+    for img in test:
+        image_array = np.fromstring(img, np.uint8)
+        temp = image_array.reshape(224, 224, 3)
+        image = Image.fromarray(temp)
+        destination_folder = os.path.join(os.getcwd(), "raw_data", "test")
+        files_count = len(os.listdir(destination_folder))
+        image.save(os.path.join(destination_folder,f"{files_count+1}.jpg"))
+        df = pd.DataFrame({
+        'path':[f'test/{files_count+1}.jpg'],
+        'class_id':[label]
+        })
+        df.to_csv(f"{test_csv_path}",mode='a', header=False, index=False)
+
+    for img in train:
+        image_array = np.fromstring(img, np.uint8)
+        temp = image_array.reshape(224, 224, 3)
+        image = Image.fromarray(temp)
+        destination_folder = os.path.join(os.getcwd(), "raw_data", "added_data")
+        files_count = len(os.listdir(destination_folder))
+        image.save(os.path.join(destination_folder,f"{files_count+1}.jpg"))
+        df = pd.DataFrame({
+        'path':[f'added_data/{files_count+1}.jpg'],
+        'class_id':[label]
+        })
+        df.to_csv(f"{train_csv_path}",mode='a', header=False, index=False)
+
+    df = pd.DataFrame({
+        'class_id':[label],
+        'lego_ids':[f'[{lego_ids}]'],
+        'lego_names':[f'["{lego_names}"]'],
+        'minifigure_name':[minifigure_name]
+        })
+    df.to_csv(f"{metadata_csv_path}",mode='a', header=False, index=False)
+    res = train_flow(force=True)
+    load_in_cache(api)
+    return {"Workflow": res}
+
+@api.get("/retrieve_metadata")
+def retrieve_metadata()->list:
+    metadata_csv_path = os.path.join(os.getcwd(), "raw_data", "metadata.csv")
+    metadata = pd.read_csv(metadata_csv_path, index_col='class_id')
+    data = list(metadata['lego_ids']+ ' '
+                 +metadata['lego_names']+ ' '
+                 + metadata['minifigure_name'])
+    return data

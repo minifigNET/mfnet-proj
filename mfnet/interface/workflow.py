@@ -25,11 +25,12 @@ def transition_model(current_stage: str, new_stage: str):
     return mlflow_transition_model(current_stage=current_stage, new_stage=new_stage)
 
 @flow(name=PREFECT_FLOW_NAME)
-def train_flow():
+def train_flow(force=False):
     """
     - Import new data
     - compute `old_accuracy` by evaluating the current production model
     - compute `new_accuracy` by re-training, then evaluating the current production
+    - force new model in production if desired
     - if the new one is better than the old one, replace the current production model with the new one
     """
 
@@ -41,7 +42,7 @@ def train_flow():
     old_accuracy = old_accuracy.result()
     new_accuracy = new_accuracy.result()
 
-    if old_accuracy < new_accuracy:
+    if old_accuracy < new_accuracy or force:
         print(f"🚀 New model replacing old in production with accuracy: {new_accuracy} the Old accuracy was: {old_accuracy}")
         transition_model.submit(current_stage="Staging", new_stage="Production")
         return f"🚀 New model replacing old in production with accuracy: {new_accuracy} the Old accuracy was: {old_accuracy}"
