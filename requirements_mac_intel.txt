@@ -255,3 +255,4 @@ fastapi         # API framework
 # pytz            # time zone management
 uvicorn         # web server
 python-multipart
+prefect

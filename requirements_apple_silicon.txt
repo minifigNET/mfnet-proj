@@ -153,6 +153,7 @@ platformdirs==2.5.2
 plotly==5.9.0
 pluggy==1.0.0
 pmdarima==2.0.1
+prefect==2.5.0
 prometheus-client==0.15.0
 promise==2.3
 prompt-toolkit==3.0.31
