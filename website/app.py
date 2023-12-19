@@ -88,7 +88,7 @@ if st.button("📸 Open camera"):
 # Let the user upload a photo of their minifig
 #############################################
 st.markdown('## ... or upload one if you prefer')
-uploaded_file = st.file_uploader("Select a photo (preferably with the subject in the centre):", type=[
+st.file_uploader("Select a photo (preferably with the subject in the centre):", type=[
                                  'png', 'jpeg', 'jpg'], key="upload")
 
 #####################################################
@@ -109,8 +109,9 @@ if photo:
         img_bytes = photo.convert("RGB").tobytes()
 
         # Make request to API
-        response = requests.post(f'{st.secrets.API_URL}/predict',
-                                 files={'img': img_bytes})
+        response = requests.post('http://127.0.0.1:8000/predict',
+                                 files={'img': img_bytes,
+                                        })
 
         if response.status_code == 200:
             print("✅ Image analyzed successfully.")
@@ -280,9 +281,45 @@ def sanitize_input(input_str):
     return sanitized_str
 
 
-st.write("Can't find your minifig in the dropdown menus? Enter all the details you have here:")
-user_text = st.text_input("Name, series, set number - any information is helpful!")
-sanitized_input = sanitize_input(user_text)
+st.write("Now please tell us all the details you have. Name, series, set number - any information is helpful!")
+
+user_text = st.text_input("Name:")
+minifig_name = sanitize_input(user_text)
+user_text = st.text_input("Series:")
+minifig_series = sanitize_input(user_text)
+user_text = st.text_input("Set Number:")
+minifig_set = sanitize_input(user_text)
+
+st.file_uploader("Select a photo (preferably with the subject in the centre):", type=[
+                                 'png', 'jpeg', 'jpg'],accept_multiple_files=True,key='class_upload')
+photo_classes = st.session_state.class_upload if "class_upload" in st.session_state and st.session_state.class_upload \
+    else None
+
+if photo_classes and minifig_series and minifig_name and minifig_name:
+    if len(photo_classes) > 7:
+        photos = [resize_224(photo).convert("RGB").tobytes() for photo in photo_classes]
+        data = {
+            "lego_ids": minifig_set,
+            "lego_names": minifig_series,
+            "minifigure_name": minifig_name
+        }
+        files = [("imgs", (f"photo{i}", photo)) for i, photo in enumerate(photos)]
+        # st.write(files)
+        response = requests.post('http://127.0.0.1:8000/add_class',
+                                        params = data,
+                                        files = files
+                                        )
+        if response.status_code == 200:
+            st.markdown('### Added to database:')
+            st.write( 'Tada! 😊')
+            photo_classes.clear()
+        else:
+            st.markdown("**Oops**, something went wrong 😓 Please try again.")
+            print(response.status_code, response.content)
+
+    else:
+        st.write('Please add more photos')
+
 st.write(
     f'Thank you! You entered: {user_text}. We will add this to our database.')
 

@@ -93,12 +93,9 @@ def train(learning_rate=0.0001):
     with open(os.path.join(cwr, "cached_data", "preprocessed", 'y_test.pkl'), 'rb') as file:
         y_test = pickle.load(file)
 
-    model = load_model()
-
-    if model is None:
-        nb_classes = len(set(y_train))
-        print(f"ℹ️ Detected {nb_classes} classes.")
-        model = initialize_model(nb_labels=nb_classes)
+    nb_classes = len(set(y_train))
+    print(f"ℹ️ Detected {nb_classes} classes.")
+    model = initialize_model(nb_labels=nb_classes)
 
     model = compile_model(model, learning_rate=learning_rate)
 
