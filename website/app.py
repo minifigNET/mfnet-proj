@@ -145,9 +145,6 @@ if prediction or st.session_state.get("selected_key", None):
     st.write("Maybe our prediction was wrong but you know the real name of your minifig?")
     st.write("If so, please help us out!")
 
-    st.text("")
-    st.text("")
-
     response = requests.get(f'{st.secrets.API_URL}/retrieve_metadata')
 
     if response.status_code == 200:
@@ -175,16 +172,16 @@ if prediction or st.session_state.get("selected_key", None):
             sanitized_str = html.escape(input_str)
             return sanitized_str
 
-        st.markdown("**Can't find your minifig in the dropdown menus?** Please send us at least 8 photos from different angles and all the details you have. Name, series, set number - any information is helpful!")
+        st.text("")
+        st.text("")
+        st.markdown("🧐 **Can't find your minifig in the dropdown menu?** Please send us at least 8 photos from different angles and all the details you have. Name, series, set number - any information is helpful!")
 
-        minifig_name = sanitize_input(st.text_input("Name:"))
-        minifig_series = sanitize_input(st.text_input("Set Series:"))
-        minifig_set_number = sanitize_input(st.text_input("Set Number:"))
+        minifig_name = sanitize_input(st.text_input("Name*:"))
+        minifig_series = sanitize_input(st.text_input("Set*:"))
+        minifig_set_number = sanitize_input(st.text_input("Set Number*:"))
 
         photo_classes = st.file_uploader("Select photos (preferably with the subject in the centre):", type=[
-            'png', 'jpeg', 'jpg'], accept_multiple_files=True)  # , key='class_upload')
-        # photo_classes = st.session_state.class_upload if "class_upload" in st.session_state and st.session_state.class_upload \
-        #     else None
+            'png', 'jpeg', 'jpg'], accept_multiple_files=True)
 
         if st.button("⬆️ Send images"):
             if len(photo_classes) > 7 and photo_classes and minifig_name and minifig_series and minifig_set_number:
@@ -208,7 +205,7 @@ if prediction or st.session_state.get("selected_key", None):
                     print(response.status_code, response.content)
 
             else:
-                st.write('⚠️ Please add more photos or missing information. 😊')
+                st.write('⚠️ Please add more photos or any missing information. 😊')
 
 
 #########################################
@@ -221,4 +218,4 @@ st.text("")
 st.text("")
 st.text("")
 st.text("")
-st.write("Copyright minifigNET (c)2023.")
+st.write("© 2023 MinifigNET.")
