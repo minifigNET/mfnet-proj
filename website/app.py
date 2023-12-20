@@ -95,7 +95,7 @@ st.file_uploader("Select a photo (preferably with the subject in the centre):",
 #####################################################
 # check the image against the model, return the answer
 #####################################################
-
+prediction = None
 photo = st.session_state.capture if "capture" in st.session_state \
     else st.session_state.upload if "upload" in st.session_state and st.session_state.upload \
     else None
@@ -139,93 +139,83 @@ st.text("")
 ####################################
 # ask for input to build our database
 ####################################
+if prediction or st.session_state.get("selected_key", None):
 
-# TODO - decide whether we should remove this code, we can return it later when we are allowing people to contribute?
+    st.markdown('## Can you help us to learn more?')
+    st.write("Our prediction was wrong but you know the name of your minifig?")
+    st.write("If so, please help us out!")
 
-st.markdown('## Can you help us to learn more?')
-st.write("You know the name of your minifig, but we don't have it in our database?")
-st.write("If so, please help us out!")
+    st.text("")
+    st.text("")
 
-st.text("")
-st.text("")
+    response = requests.get(f'{st.secrets.API_URL}/retrieve_metadata')
 
-
-
-## NEW DROPDOWN INCLUDING API CALL
-
-response = requests.get('http://127.0.0.1:8000/retrieve_metadata')
-
-if response.status_code == 200:
-    data = response.json()
-
-    selected_data = st.selectbox('Select data:', data)
-
-    st.write(f'You selected: {selected_data}')
-
-if selected_data:
-    data = {
-            "class": selected_data
-            #should it be selected_data[0]? but need to get index - I'm not sure I understand Francois's api code
-        }
-
-    response = requests.post('http://127.0.0.1:8000/add_img_train',
-                                        params = data
-                                        )
     if response.status_code == 200:
-        st.markdown('### Added to database:')
-        st.write("Tada! Thank you, we've added that image to the database. 😊")
+        data = response.json()
 
-    # else:
-    #     st.markdown("**Oops**, something went wrong 😓 Please try again.")
-    #     print(response.status_code, response.content)
+        selected_key = st.selectbox('Select data:', data.keys(), key="selected_key")
+    else:
+        st.markdown("**Oops**, something went wrong 😓 Please try again.")
 
-
-
-def sanitize_input(input_str):
-    sanitized_str = html.escape(input_str)
-    return sanitized_str
-
-st.write("Can't find your minifig in the dropdown menus? Please send us at least 8 photos from different angles and all the details you have. Name, series, set number - any information is helpful!")
-
-user_text = st.text_input("Name:")
-minifig_name = sanitize_input(user_text)
-user_text = st.text_input("Series:")
-minifig_series = sanitize_input(user_text)
-user_text = st.text_input("Set Number:")
-minifig_set = sanitize_input(user_text)
-
-st.file_uploader("Select a photo (preferably with the subject in the centre):", type=[
-    'png', 'jpeg', 'jpg'], accept_multiple_files=True, key='class_upload')
-photo_classes = st.session_state.class_upload if "class_upload" in st.session_state and st.session_state.class_upload \
-    else None
-
-if photo_classes and minifig_series and minifig_name and minifig_name:
-    if len(photo_classes) > 7:
-        photos = [resize_224(photo).convert("RGB").tobytes() for photo in photo_classes]
+    if st.button('Confirm') and selected_key:
         data = {
-            "lego_ids": minifig_set,
-            "lego_names": minifig_series,
-            "minifigure_name": minifig_name
+            "class_id": data[st.session_state.selected_key]
         }
-        files = [("imgs", (f"photo{i}", photo)) for i, photo in enumerate(photos)]
-        # st.write(files)
-        response = requests.post(f'{st.secrets.API_URL}/add_class',
-                                 params=data,
-                                 files=files
+
+        response = requests.post(f'{st.secrets.API_URL}/add_img_train',
+                                 params=data
                                  )
         if response.status_code == 200:
             st.markdown('### Added to database:')
-            st.write('Tada! 😊')
-            photo_classes.clear()
+            st.write("Tada! Thank you, we've added that image to the database. 😊")
         else:
             st.markdown("**Oops**, something went wrong 😓 Please try again.")
-            print(response.status_code, response.content)
 
-    else:
-        st.write('Please add more photos')
+    def sanitize_input(input_str):
+        sanitized_str = html.escape(input_str)
+        return sanitized_str
 
-st.write(
-    f'Thank you! You entered: {user_text}. We will add this to our database.')
+    st.write("Can't find your minifig in the dropdown menus? Please send us at least 8 photos from different angles and all the details you have. Name, series, set number - any information is helpful!")
+
+    user_text = st.text_input("Name:")
+    minifig_name = sanitize_input(user_text)
+    user_text = st.text_input("Series:")
+    minifig_series = sanitize_input(user_text)
+    user_text = st.text_input("Set Number:")
+    minifig_set = sanitize_input(user_text)
+
+    st.file_uploader("Select a photo (preferably with the subject in the centre):", type=[
+        'png', 'jpeg', 'jpg'], accept_multiple_files=True, key='class_upload')
+    photo_classes = st.session_state.class_upload if "class_upload" in st.session_state and st.session_state.class_upload \
+        else None
+
+    if photo_classes and minifig_series and minifig_name and minifig_name:
+        if len(photo_classes) > 7:
+            photos = [resize_224(photo).convert("RGB").tobytes() for photo in photo_classes]
+            data = {
+                "lego_ids": minifig_set,
+                "lego_names": minifig_series,
+                "minifigure_name": minifig_name
+            }
+            files = [("imgs", (f"photo{i}", photo)) for i, photo in enumerate(photos)]
+            # st.write(files)
+            response = requests.post(f'{st.secrets.API_URL}/add_class',
+                                     params=data,
+                                     files=files
+                                     )
+            if response.status_code == 200:
+                st.markdown('### Added to database:')
+                st.write('Tada! 😊')
+                photo_classes.clear()
+            else:
+                st.markdown("**Oops**, something went wrong 😓 Please try again.")
+                print(response.status_code, response.content)
+
+        else:
+            st.write('Please add more photos')
+
+    st.write(
+        f'Thank you! You entered: {user_text}. We will add this to our database.')
 
 
 #########################################
