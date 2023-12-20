@@ -23,7 +23,7 @@ load_in_cache(api)
 
 
 @api.get("/")
-def index():
+def get_status():
     return {"status": "ok"}
 
 
@@ -75,8 +75,8 @@ def model_predict(X_pred: np.ndarray, y_true: int = None):
     return y_pred_metadata
 
 
-@api.get("/add_img_train")
-def add_img_train(label: int):
+@api.post("/add_img_train")
+def add_img_train(class_id: int) -> None:
     """
     Moves image to another folder
     """
@@ -90,11 +90,12 @@ def add_img_train(label: int):
     """
     df = pd.DataFrame({
         'path': [f'added_data/{files_count+1}.png'],
-        'class_id': [label]
+        'class_id': [class_id]
     })
     csv_path = os.path.join(os.getcwd(), "raw_data", "index.csv")
     df.to_csv(f"{csv_path}", mode='a', header=False, index=False)
-    return {"Workflow": train_flow()}
+    train_flow(force=True)
+    load_in_cache(api)
 
 
 @api.get("/retrain")
@@ -103,11 +104,11 @@ def retrain():
 
 
 @api.post("/add_class")
-async def add_class(imgs:list,
-                    lego_ids:str,
-                    lego_names:str,
-                    minifigure_name:str
-                    ):
+async def add_class(imgs: list,
+                    lego_ids: str,
+                    lego_names: str,
+                    minifigure_name: str
+                    ) -> None:
     """
     Splits images 3/4 train and 1/4 test
     Saves images in added_data or test folder
@@ -130,12 +131,12 @@ async def add_class(imgs:list,
         image = Image.fromarray(temp)
         destination_folder = os.path.join(os.getcwd(), "raw_data", "test")
         files_count = len(os.listdir(destination_folder))
-        image.save(os.path.join(destination_folder,f"{files_count+1}.jpg"))
+        image.save(os.path.join(destination_folder, f"{files_count+1}.jpg"))
         df = pd.DataFrame({
-        'path':[f'test/{files_count+1}.jpg'],
-        'class_id':[label]
+            'path': [f'test/{files_count+1}.jpg'],
+            'class_id': [label]
         })
-        df.to_csv(f"{test_csv_path}",mode='a', header=False, index=False)
+        df.to_csv(f"{test_csv_path}", mode='a', header=False, index=False)
 
     for img in train:
         image_array = np.fromstring(img, np.uint8)
@@ -143,29 +144,31 @@ async def add_class(imgs:list,
         image = Image.fromarray(temp)
         destination_folder = os.path.join(os.getcwd(), "raw_data", "added_data")
         files_count = len(os.listdir(destination_folder))
-        image.save(os.path.join(destination_folder,f"{files_count+1}.jpg"))
+        image.save(os.path.join(destination_folder, f"{files_count+1}.jpg"))
         df = pd.DataFrame({
-        'path':[f'added_data/{files_count+1}.jpg'],
-        'class_id':[label]
+            'path': [f'added_data/{files_count+1}.jpg'],
+            'class_id': [label]
         })
-        df.to_csv(f"{train_csv_path}",mode='a', header=False, index=False)
+        df.to_csv(f"{train_csv_path}", mode='a', header=False, index=False)
 
     df = pd.DataFrame({
-        'class_id':[label],
-        'lego_ids':[f'[{lego_ids}]'],
-        'lego_names':[f'["{lego_names}"]'],
-        'minifigure_name':[minifigure_name]
-        })
-    df.to_csv(f"{metadata_csv_path}",mode='a', header=False, index=False)
-    res = train_flow(force=True)
+        'class_id': [label],
+        'lego_ids': [f'[{lego_ids}]'],
+        'lego_names': [f'["{lego_names}"]'],
+        'minifigure_name': [minifigure_name]
+    })
+    df.to_csv(f"{metadata_csv_path}", mode='a', header=False, index=False)
+    train_flow(force=True)
     load_in_cache(api)
-    return {"Workflow": res}
+
 
 @api.get("/retrieve_metadata")
-def retrieve_metadata()->list:
+def retrieve_metadata() -> dict:
     metadata_csv_path = os.path.join(os.getcwd(), "raw_data", "metadata.csv")
     metadata = pd.read_csv(metadata_csv_path, index_col='class_id')
-    data = list(metadata['lego_ids']+ ' '
-                 +metadata['lego_names']+ ' '
-                 + metadata['minifigure_name'])
-    return data
+
+    response = {
+        f"{row['lego_ids']} {row['lego_names']} {row['minifigure_name']}":
+        index for index, row in metadata.iterrows()
+    }
+    return response
