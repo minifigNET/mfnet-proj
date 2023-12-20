@@ -2,8 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 
-import asyncio
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, BackgroundTasks
 from PIL import Image
 
 from mfnet.interface.workflow import train_flow
@@ -88,7 +87,7 @@ def retrieve_metadata() -> dict:
 
 
 @api.post("/add_img_train")
-def add_img_train(class_id: int) -> None:
+def add_img_train(class_id: int, background_tasks: BackgroundTasks) -> None:
     """
     Moves image to another folder
     """
@@ -106,15 +105,16 @@ def add_img_train(class_id: int) -> None:
     })
     csv_path = os.path.join(os.getcwd(), "raw_data", "index.csv")
     df.to_csv(f"{csv_path}", mode='a', header=False, index=False)
-    train_and_reload(api)
+
+    background_tasks.add_task(train_and_reload, api)
 
 
 @api.post("/add_class")
 async def add_class(imgs: list,
                     lego_ids: str,
                     lego_names: str,
-                    minifigure_name: str
-                    ) -> None:
+                    minifigure_name: str,
+                    background_tasks: BackgroundTasks) -> None:
     """
     Splits images 3/4 train and 1/4 test
     Saves images in added_data or test folder
@@ -166,19 +166,10 @@ async def add_class(imgs: list,
         'minifigure_name': [minifigure_name]
     })
     df.to_csv(f"{metadata_csv_path}", mode='a', header=False, index=False)
-    train_and_reload(api)
+
+    background_tasks.add_task(train_and_reload, api)
 
 
-def fire_and_forget(f):
-    def wrapped(*args, **kwargs):
-        if asyncio.get_event_loop() is None:
-            asyncio.set_event_loop(asyncio.new_event_loop())
-        return asyncio.get_event_loop().run_in_executor(None, f, *args, *kwargs)
-
-    return wrapped
-
-
-@fire_and_forget
 def train_and_reload(api):
     train_flow(force=True)
     load_in_cache(api)
