@@ -172,6 +172,10 @@ thumbs.db
 
 # Prediction images
 raw_data/preds/*.png
+raw_data/added_data/*.png
 
 # Secrets
 secrets.*
+
+#nohup logs
+nohup.out
