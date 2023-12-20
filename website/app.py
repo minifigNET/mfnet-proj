@@ -101,11 +101,11 @@ photo = st.session_state.capture if "capture" in st.session_state \
     else None
 
 if photo:
-    st.markdown("## Now let's analyze your photo")
+    st.markdown("## Now let's analyse your photo")
     photo = resize_224(photo)
     st.image(photo)
 
-    with st.spinner("Analyzing..."):
+    with st.spinner("Analysing..."):
         # Get bytes from the file buffer
         img_bytes = photo.convert("RGB").tobytes()
 
@@ -115,7 +115,7 @@ if photo:
                                         })
 
         if response.status_code == 200:
-            print("✅ Image analyzed successfully.")
+            print("✅ Image analysed successfully.")
             # prediction = {
             #     'probability': 0.99,
             #     'minifigure_name': "SANTA",
@@ -142,7 +142,7 @@ st.text("")
 if prediction or st.session_state.get("selected_key", None):
 
     st.markdown('## Can you help us to learn more?')
-    st.write("Our prediction was wrong but you know the name of your minifig?")
+    st.write("Maybe our prediction was wrong but you know the real name of your minifig?")
     st.write("If so, please help us out!")
 
     st.text("")
@@ -153,11 +153,11 @@ if prediction or st.session_state.get("selected_key", None):
     if response.status_code == 200:
         data = response.json()
 
-        selected_key = st.selectbox('Select data:', data.keys(), key="selected_key")
+        selected_key = st.selectbox('Select your minifig:', data.keys(), key="selected_key")
     else:
         st.markdown("**Oops**, something went wrong 😓 Please try again.")
 
-    if st.button('Confirm') and selected_key:
+    if st.button('⬆️ Send image') and selected_key:
         data = {
             "class_id": data[st.session_state.selected_key]
         }
@@ -166,56 +166,49 @@ if prediction or st.session_state.get("selected_key", None):
                                  params=data
                                  )
         if response.status_code == 200:
-            st.markdown('### Added to database:')
-            st.write("Tada! Thank you, we've added that image to the database. 😊")
+            st.markdown('**✅ Added to database**')
+            st.write("Tada! Thank you, we've added your image to the database. 😊")
         else:
             st.markdown("**Oops**, something went wrong 😓 Please try again.")
+    else:
+        def sanitize_input(input_str):
+            sanitized_str = html.escape(input_str)
+            return sanitized_str
 
-    def sanitize_input(input_str):
-        sanitized_str = html.escape(input_str)
-        return sanitized_str
+        st.markdown("**Can't find your minifig in the dropdown menus?** Please send us at least 8 photos from different angles and all the details you have. Name, series, set number - any information is helpful!")
 
-    st.write("Can't find your minifig in the dropdown menus? Please send us at least 8 photos from different angles and all the details you have. Name, series, set number - any information is helpful!")
+        minifig_name = sanitize_input(st.text_input("Name:"))
+        minifig_series = sanitize_input(st.text_input("Set Series:"))
+        minifig_set_number = sanitize_input(st.text_input("Set Number:"))
 
-    user_text = st.text_input("Name:")
-    minifig_name = sanitize_input(user_text)
-    user_text = st.text_input("Series:")
-    minifig_series = sanitize_input(user_text)
-    user_text = st.text_input("Set Number:")
-    minifig_set = sanitize_input(user_text)
+        photo_classes = st.file_uploader("Select photos (preferably with the subject in the centre):", type=[
+            'png', 'jpeg', 'jpg'], accept_multiple_files=True)  # , key='class_upload')
+        # photo_classes = st.session_state.class_upload if "class_upload" in st.session_state and st.session_state.class_upload \
+        #     else None
 
-    st.file_uploader("Select a photo (preferably with the subject in the centre):", type=[
-        'png', 'jpeg', 'jpg'], accept_multiple_files=True, key='class_upload')
-    photo_classes = st.session_state.class_upload if "class_upload" in st.session_state and st.session_state.class_upload \
-        else None
+        if st.button("⬆️ Send images"):
+            if len(photo_classes) > 7 and photo_classes and minifig_name and minifig_series and minifig_set_number:
+                photos = [resize_224(photo).convert("RGB").tobytes() for photo in photo_classes]
+                data = {
+                    "lego_ids": minifig_set_number,
+                    "lego_names": minifig_series,
+                    "minifigure_name": minifig_name
+                }
+                files = [("imgs", (f"photo{i}", photo)) for i, photo in enumerate(photos)]
+                response = requests.post(f'{st.secrets.API_URL}/add_class',
+                                         params=data,
+                                         files=files
+                                         )
+                if response.status_code == 200:
+                    st.markdown('**✅ Added to database**')
+                    st.write("Tada! Thank you, we've added your images to the database. 😊")
+                    photo_classes.clear()
+                else:
+                    st.markdown("**Oops**, something went wrong 😓 Please try again.")
+                    print(response.status_code, response.content)
 
-    if photo_classes and minifig_series and minifig_name and minifig_name:
-        if len(photo_classes) > 7:
-            photos = [resize_224(photo).convert("RGB").tobytes() for photo in photo_classes]
-            data = {
-                "lego_ids": minifig_set,
-                "lego_names": minifig_series,
-                "minifigure_name": minifig_name
-            }
-            files = [("imgs", (f"photo{i}", photo)) for i, photo in enumerate(photos)]
-            # st.write(files)
-            response = requests.post(f'{st.secrets.API_URL}/add_class',
-                                     params=data,
-                                     files=files
-                                     )
-            if response.status_code == 200:
-                st.markdown('### Added to database:')
-                st.write('Tada! 😊')
-                photo_classes.clear()
             else:
-                st.markdown("**Oops**, something went wrong 😓 Please try again.")
-                print(response.status_code, response.content)
-
-        else:
-            st.write('Please add more photos')
-
-    st.write(
-        f'Thank you! You entered: {user_text}. We will add this to our database.')
+                st.write('⚠️ Please add more photos or missing information. 😊')
 
 
 #########################################
@@ -225,3 +218,7 @@ if prediction or st.session_state.get("selected_key", None):
 st.text("")
 st.text("")
 st.text("")
+st.text("")
+st.text("")
+st.text("")
+st.write("Copyright minifigNET (c)2023.")
