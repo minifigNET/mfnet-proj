@@ -151,68 +151,6 @@ st.text("")
 
 
 
-class_options = [
-
-    ('No: 43 - Marvel Collectible Minifigure Series 1 (Set Number: 71039)', ['Goliath', 'She-Hulk', 'Echo', 'Kate Bishop', 'Hawkeye',
-                                                                            'Moon Knight', 'Mr. Knight', 'Storm', 'Beast',
-                                                                            'Wolverine', 'Agatha Harkness', 'The Werewolf']),
-    ('No: 42 - Disney 100 Minifigure Series (Set Number: 71038)', ['Pocahontas', 'Aurora', 'Mulan', 'Tiana', 'The Queen',
-                                                                    'Queen of Hearts', 'Dr Facilier', 'Cruella de Vil & Dalmatian puppy',
-                                                                    'Sorcerers Apprentice Mickey', 'Pinocchio', 'Jimmy Cricket',
-                                                                    'Michael', 'Dante', 'Ernesto de la Cruz', 'Stitch 626',
-                                                                    'Oswald the Lucky Rabbit', 'Robin Hood', 'Prince John', 'Baymax']),
-    ('No: 41 - Series 24 (Set Number: 71037)', ['T-Rex Fan Costume', 'Rococo Aristocrat', 'Robot Warrior', 'Potter',
-                                                'Newspaper Kid', 'Orc', 'Soccer Referee', 'Falconer', 'Conservationist',
-                                                'Carrot Mascot', 'Brown Astronaut and Spacebaby', 'Rockin Horse Rider']),
-    ('No: 40 - Series 23 (Set Number: 71034)', ['Green Dragon Costume', 'Knight of the Yellow Castle'
-                                                 'Cardboard Robot', 'Popcorn Costume', 'Nutcracker', 'Sugar Fairy', 'Ferry Captain',
-                                                 'Turkey Costume', 'Wolf Costume', 'Snowman', 'Reindeer Costume', 'Holiday Elf']),
-    ('No: 39 - Muppets Series (Set Number: 71033)', ['Statler', 'Waldorf', 'Dr. Bunsen Honeydew', 'Beaker', 'Animal', 'Miss Piggy',
-                                                     'Kermit the Frog', 'Rowlf the Dog', 'The Swedish Chef', 'Gonzo', 'Janice', 'Fozzie Bear']),
-    ('No: 38 - Series 22 (Set Number: 71032)', ['Figure Skating Champion', 'Snow Guardian', 'Chili Costume Fan',
-                                                'Racoon Costume Fan', 'Forest Elf', 'Night Protector', 'Space Creature',
-                                                'Robot Repair Tech', 'Troubadour']),
-    ('No: 37 - Marvel Collectible Minifigure Series 2 (Set Number: 71031)', ['Captain America', 'Winter Soldier', 'The Scarlet Witch',
-                                                                            'The Vision', 'Monica Rambeau', 'Gamora', 'Zombie Hunter Spidey',
-                                                                            'Zombie Captain America', 'Captain Carter', 'TChalla Star Lord',
-                                                                            'Loki', 'Sylvie']),
-    ('No: 36 - Looney Tunes Series (Set Number: 71030)', ['Bugs Bunny', 'Lola Bunny', 'Daffy Duck', 'Tweety Bird', 'Sylvester', 'Road Runner',
-                                                          'Wile E. Coyote', 'Porky Pig', 'Petunia Pig', 'Speedy Gonzales', 'Tasmanian Devil',
-                                                          'Marvin the Martian']),
-    ('No: 35 - Series 21 (Set Number: 71029)', ['Centaur Warrior', 'Shipwreck Survivor', 'Pug Costume Guy', 'Beekeeper',
-                                                'Ladybug Girl', 'Violin Kid', 'Alien', 'Space Police Guy', 'Ancient Warrior',
-                                                'Airplane Girl', 'Cabaret Singer', 'Paddle Surfer']),
-    ('No: 34 - Harry Potter Series 2 (Set Number: 71028)', ['Harry Potter', 'Hermione Granger™', 'Ron Weasley™', 'Ginny Weasley',
-                                                            'Fred Weasley','George Weasley', 'Luna Lovegood™', 'Moaning Myrtle', 'Griphook',
-                                   'Headmaster Albus Dumbledore™', 'Professor Sprout', 'Neville Longbottom™',
-                                  'Kingsley Shacklebolt', 'Bellatrix Lestrange', 'Lily Potter', 'James Potter']),
-    ('No: 33 = Series 20 (Set Number: 71027)', ['Piñata boy', 'Pajama girl', 'Drone boy', '80s musician', 'Peapod costume girl', 'Sea rescuer', 'Viking',
-                                'Pirate girl', 'Martial arts boy', 'Breakdancer', 'Llama costume girl', 'Brick costume guy', 'Athlete',
-                                        'Space fan', 'Super warrior', 'Tournament knight']),
-    ('No: 32 - DC Super Heroes Series (Set Number: 71026)', ['Batman', 'Superman', 'The Joker', 'Huntress', 'Metamorpho', 'Sinestro',
-                                                             'Green Lantern', 'Mr. Miracle', 'Bat-Mite', 'Star Girl', 'Cheetah', 'Aquaman',
-                                                    'Cyborg', 'BUMBLEBEE', 'The Flash', 'Wonder Woman']),
-    ('No: 31 - Series 19 (Set Number: 71025)', ['Dog Sitter', 'Video Game Champ', 'Shower Guy', 'Rugby Player', 'Bear Costume Guy',
-                                                'Pizza Costume Guy', 'Galactic Bounty Hunter', 'Monkey King', 'Programmer',
-                                                'Gardener', 'Fire Fighter', 'Mountain Biker', 'Fright Knight', 'Mummy Queen',
-                                                'Jungle Explorer', 'Fox Costume Girl']),
-    ('No: 30 - Disney Series 2[ (Set Number: 71024)', ['Vintage Mickey', 'Vintage Minnie', 'Hercules', 'Jack Skellington',
-                                                        'Scrooge McDuck', 'Huey, Dewey', 'Louie', 'Chip', 'Dale', 'Jasmine',
-                                                        'Jafar', 'Hades', 'Elsa', 'Anna', 'Sally', 'Edna', 'Frozone'])
-]
-
-# selected_class = st.selectbox('What class does your minifig belong to?', [option[0] for option in class_options])
-
-
-# for option, characters in class_options:
-#     if selected_class == option:
-#         selected_character = st.selectbox('What is the character name?', characters)
-#         st.write(f'You selected {option}:', selected_character)
-#         break
-
-# st.text("")
-# st.text("")
-
 ## NEW DROPDOWN INCLUDING API CALL
 
 response = requests.get('http://127.0.0.1:8000/retrieve_metadata')
@@ -226,7 +164,8 @@ if response.status_code == 200:
 
 if selected_data:
     data = {
-            "class": selected_data[0]
+            "class": selected_data
+            #should it be selected_data[0]? but need to get index - I'm not sure I understand Francois's api code
         }
 
     response = requests.post('http://127.0.0.1:8000/add_img_train',
