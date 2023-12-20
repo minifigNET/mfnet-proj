@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 
+import asyncio
 from fastapi import FastAPI, UploadFile, File
 from PIL import Image
 
@@ -74,6 +75,18 @@ def model_predict(X_pred: np.ndarray, y_true: int = None):
     return y_pred_metadata
 
 
+@api.get("/retrieve_metadata")
+def retrieve_metadata() -> dict:
+    metadata_csv_path = os.path.join(os.getcwd(), "raw_data", "metadata.csv")
+    metadata = pd.read_csv(metadata_csv_path, index_col='class_id')
+
+    response = {
+        f"{row['lego_ids']} {row['lego_names']} {row['minifigure_name']}":
+        index for index, row in metadata.iterrows()
+    }
+    return response
+
+
 @api.post("/add_img_train")
 def add_img_train(class_id: int) -> None:
     """
@@ -93,13 +106,7 @@ def add_img_train(class_id: int) -> None:
     })
     csv_path = os.path.join(os.getcwd(), "raw_data", "index.csv")
     df.to_csv(f"{csv_path}", mode='a', header=False, index=False)
-    train_flow(force=True)
-    load_in_cache(api)
-
-
-@api.get("/retrain")
-def retrain():
-    return {"Workflow": train_flow()}
+    train_and_reload(api)
 
 
 @api.post("/add_class")
@@ -159,17 +166,19 @@ async def add_class(imgs: list,
         'minifigure_name': [minifigure_name]
     })
     df.to_csv(f"{metadata_csv_path}", mode='a', header=False, index=False)
+    train_and_reload(api)
+
+
+def fire_and_forget(f):
+    def wrapped(*args, **kwargs):
+        if asyncio.get_event_loop() is None:
+            asyncio.set_event_loop(asyncio.new_event_loop())
+        return asyncio.get_event_loop().run_in_executor(None, f, *args, *kwargs)
+
+    return wrapped
+
+
+@fire_and_forget
+def train_and_reload(api):
     train_flow(force=True)
     load_in_cache(api)
-
-
-@api.get("/retrieve_metadata")
-def retrieve_metadata() -> dict:
-    metadata_csv_path = os.path.join(os.getcwd(), "raw_data", "metadata.csv")
-    metadata = pd.read_csv(metadata_csv_path, index_col='class_id')
-
-    response = {
-        f"{row['lego_ids']} {row['lego_names']} {row['minifigure_name']}":
-        index for index, row in metadata.iterrows()
-    }
-    return response
