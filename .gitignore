@@ -170,9 +170,8 @@ thumbs.db
 *.pickle
 *.h5
 
-# Prediction images
-raw_data/preds/*.png
-raw_data/added_data/*.png
+# Raw data
+raw_data/*
 
 # Secrets
 secrets.*

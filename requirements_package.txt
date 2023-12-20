@@ -4,6 +4,6 @@ pandas==1.4.4
 Pillow==9.1.1
 prefect==2.14.11
 tensorflow==2.10.0
-fastapi         # API framework
+fastapi==0.105.0         # API framework
 uvicorn         # web server
 python-multipart

@@ -32,7 +32,6 @@ async def predict(img: UploadFile = File(...)) -> dict:
     # Receiving and decoding the image
     contents = await img.read()
     image_array = np.fromstring(contents, np.uint8)
-    print(image_array.shape)
     X_pred = image_array.reshape(224, 224, 3)
 
     image = Image.fromarray(X_pred)
@@ -126,7 +125,8 @@ async def add_class(imgs: list,
     label = max(metadata.index)+1
 
     for img in test:
-        image_array = np.fromstring(img, np.uint8)
+        contents = await img.read()
+        image_array = np.fromstring(contents, np.uint8)
         temp = image_array.reshape(224, 224, 3)
         image = Image.fromarray(temp)
         destination_folder = os.path.join(os.getcwd(), "raw_data", "test")
@@ -139,7 +139,8 @@ async def add_class(imgs: list,
         df.to_csv(f"{test_csv_path}", mode='a', header=False, index=False)
 
     for img in train:
-        image_array = np.fromstring(img, np.uint8)
+        contents = await img.read()
+        image_array = np.fromstring(contents, np.uint8)
         temp = image_array.reshape(224, 224, 3)
         image = Image.fromarray(temp)
         destination_folder = os.path.join(os.getcwd(), "raw_data", "added_data")
