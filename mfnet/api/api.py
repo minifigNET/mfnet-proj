@@ -27,6 +27,11 @@ def get_status():
     return {"status": "ok"}
 
 
+@api.get("/reload")
+def reload():
+    load_in_cache(api)
+
+
 @api.post("/predict")
 async def predict(img: UploadFile = File(...)) -> dict:
     # Receiving and decoding the image
