@@ -23,13 +23,14 @@ load_in_cache(api)
 
 
 @api.get("/")
-def get_status():
+def get_status() -> dict:
     return {"status": "ok"}
 
 
 @api.get("/reload")
-def reload():
+def reload() -> dict:
     load_in_cache(api)
+    return {"reloaded": "ok"}
 
 
 @api.post("/predict")
