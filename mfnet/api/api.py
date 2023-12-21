@@ -173,9 +173,9 @@ async def add_class(imgs: list,
     })
     df.to_csv(f"{metadata_csv_path}", mode='a', header=False, index=False)
 
-    background_tasks.add_task(train_and_reload, api)
+    background_tasks.add_task(train_and_reload, api, add_class=True)
 
 
-def train_and_reload(api):
-    train_flow(force=True)
+def train_and_reload(api,add_class=False):
+    train_flow(force=True,new_class=add_class)
     load_in_cache(api)

@@ -28,7 +28,7 @@ def transition_model(current_stage: str, new_stage: str):
 
 
 @flow(name=PREFECT_FLOW_NAME)
-def train_flow(force: bool = False) -> None:
+def train_flow(force: bool = False, new_class: bool=False) -> None:
     """
     - Import new data
     - compute `old_accuracy` by evaluating the current production model
@@ -38,13 +38,17 @@ def train_flow(force: bool = False) -> None:
     """
 
     preprocessed = preprocess_new_data.submit()
-
+    if new_class:
+        new_accuracy = re_train.submit(wait_for=[preprocessed])
+        new_accuracy = new_accuracy.result()
+        print(
+            f"🚀 New model with added class replacing old in production with accuracy: {new_accuracy}")
+        transition_model.submit(current_stage="Staging", new_stage="Production")
+        return None
     old_accuracy = evaluate_production_model.submit(wait_for=[preprocessed])
     new_accuracy = re_train.submit(wait_for=[preprocessed])
-
     old_accuracy = old_accuracy.result()
     new_accuracy = new_accuracy.result()
-
     if old_accuracy < new_accuracy or force:
         print(
             f"🚀 New model replacing old in production with accuracy: {new_accuracy} the Old accuracy was: {old_accuracy}")
